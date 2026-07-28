@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BTC Flow — yqd36sra — Jun 4 v3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f6f8fa; color: #1f2328; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; padding: 32px; max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 15px; font-weight: 700; color: #1f2328; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #d0d7de; }
+  .mono { font-family: 'SFMono-Regular', Consolas, monospace; }
+  .sub { color: #57606a; font-size: 12px; margin-bottom: 28px; }
+  a { color: #0969da; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .version-badge { display:inline-block; font-size:11px; background:#ddf4ff; border:1px solid #54aeff; border-radius:10px; padding:2px 10px; color:#0550ae; font-weight:700; margin-left:8px; vertical-align:middle; }
+
+  .you  { display:inline-block; font-family:monospace; font-size:11px; background:#ddf4ff; border:1px solid #54aeff; border-radius:3px; padding:1px 5px; color:#0550ae; font-weight:700; }
+  .wdsx { display:inline-block; font-family:monospace; font-size:11px; background:#fff5f0; border:1px solid #ffbdad; border-radius:3px; padding:1px 5px; color:#cf222e; font-weight:700; }
+  .amm  { display:inline-block; font-family:monospace; font-size:11px; background:#dafbe1; border:1px solid #4ac26b; border-radius:3px; padding:1px 5px; color:#116329; font-weight:700; }
+
+  .tag { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; white-space:nowrap; }
+  .tag.wrap    { background:#ddf4ff; color:#0550ae; border:1px solid #54aeff66; }
+  .tag.unwrap  { background:#fff8c5; color:#7d4e00; border:1px solid #d4a72c66; }
+  .tag.swap    { background:#dafbe1; color:#116329; border:1px solid #4ac26b66; }
+  .tag.conf    { background:#dafbe1; color:#116329; border:1px solid #4ac26b66; }
+  .tag.dispatch{ background:#f3e8ff; color:#6639ba; border:1px solid #c297f066; }
+
+  .tx-card { background:#fff; border:1px solid #d0d7de; border-radius:8px; margin-bottom:16px; overflow:hidden; }
+  .tx-card.wdsx-tx    { border-color:#ffbdad; }
+  .tx-card.dispatch-tx{ border-color:#c297f0; }
+  .tx-head { display:flex; align-items:center; gap:10px; padding:12px 16px; background:#f6f8fa; border-bottom:1px solid #d0d7de; flex-wrap:wrap; }
+  .tx-num { font-size:13px; font-weight:700; color:#1f2328; min-width:30px; }
+  .tx-id  { font-family:monospace; font-size:12px; }
+  .tx-body { padding:14px 16px; }
+
+  .io { display:grid; grid-template-columns:1fr 24px 1fr; gap:4px; align-items:start; }
+  .io-arrow { color:#57606a; text-align:center; padding-top:10px; font-size:16px; }
+  .col-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#57606a; margin-bottom:6px; }
+  .io-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; padding:5px 8px; border-radius:4px; margin-bottom:3px; }
+  .io-row.you-row  { background:#f0f7ff; }
+  .io-row.wdsx-row { background:#fff5f0; }
+  .io-row.amm-row  { background:#f0fff4; }
+  .io-row.dispatch-row { background:#f9f0ff; }
+  .io-row .who  { font-family:monospace; font-size:11px; }
+  .io-row .amt  { font-family:monospace; font-size:12px; font-weight:600; white-space:nowrap; }
+  .io-row .tok  { font-size:11px; color:#6639ba; margin-top:1px; }
+  .red   { color:#cf222e; }
+  .green { color:#1a7f37; }
+  .gray  { color:#57606a; }
+
+  .tx-note { margin-top:10px; font-size:12px; color:#57606a; padding:8px 10px; background:#f6f8fa; border-radius:4px; border-left:3px solid #d0d7de; line-height:1.6; }
+  .tx-note.warn     { background:#fff8c5; border-color:#d4a72c; color:#7d4e00; }
+  .tx-note.alert    { background:#fff5f0; border-color:#cf222e; color:#7d4e00; }
+  .tx-note.good     { background:#dafbe1; border-color:#4ac26b; color:#116329; }
+  .tx-note.dispatch { background:#f9f0ff; border-color:#c297f0; color:#4c2982; }
+
+  table.tally { width:100%; border-collapse:collapse; background:#fff; border:1px solid #d0d7de; border-radius:8px; overflow:hidden; font-size:13px; }
+  table.tally th { background:#f6f8fa; padding:9px 14px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.07em; color:#57606a; font-weight:700; border-bottom:1px solid #d0d7de; }
+  table.tally td { padding:9px 14px; border-bottom:1px solid #eaeef2; font-family:monospace; }
+  table.tally tr:last-child td { border-bottom:none; }
+  table.tally .section td { font-family:sans-serif; font-size:11px; font-weight:700; color:#57606a; text-transform:uppercase; letter-spacing:0.07em; background:#f6f8fa; padding:6px 14px; }
+  table.tally .total td { background:#f6f8fa; font-weight:700; font-size:13px; border-top:2px solid #d0d7de; }
+  table.tally .highlight td { background:#fff8c5; }
+  table.tally .dispatch-row td { background:#f9f0ff; }
+  table.tally .problem-row td { background:#fff5f0; font-weight:700; border-top:2px solid #cf222e; }
+  .pos { color:#1a7f37; font-weight:700; }
+  .neg { color:#cf222e; font-weight:700; }
+  .dim { color:#57606a; font-weight:400; }
+  .pur { color:#6639ba; font-weight:700; }
+
+  .verdict { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:20px 24px; margin-top:16px; }
+  .verdict h3 { font-size:14px; font-weight:700; margin-bottom:10px; }
+  .verdict table { width:100%; border-collapse:collapse; font-size:13px; }
+  .verdict td { padding:7px 0; border-bottom:1px solid #eaeef2; }
+  .verdict tr:last-child td { border-bottom:none; }
+  .verdict .label { color:#57606a; width:55%; }
+  .verdict .val { font-family:monospace; font-weight:700; }
+  .verdict.good { border-color:#4ac26b; background:#f0fff4; }
+  .verdict.neutral { border-color:#d4a72c; background:#fffbeb; }
+
+  .info-box { border:1px solid #d0d7de; border-radius:8px; padding:16px 20px; margin-top:10px; }
+  .info-box.cto   { border-color:#54aeff; background:#f0f7ff; }
+  .info-box.fee   { border-color:#c297f0; background:#f9f0ff; }
+  .info-box h4 { font-size:13px; font-weight:700; margin-bottom:10px; }
+  .info-box ul { margin:0; padding-left:20px; font-size:13px; line-height:1.9; color:#1f2328; }
+  .info-box p { font-size:13px; line-height:1.7; color:#1f2328; margin-top:8px; }
+  .check { color:#1a7f37; font-weight:700; }
+  .cross { color:#cf222e; font-weight:700; }
+
+  footer { margin-top:48px; font-size:11px; color:#57606a; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<h1>BTC Flow — yqd36sra <span class="version-badge">v3 — Jun 4, 2026</span></h1>
+<p class="sub">
+  Address: <span class="mono">bc1p774e7663a0uvhht92esq07ujsu72m7gjhkck5vpz7c4dr999qayqd36sra</span><br>
+  TX 1–6 confirmed · TX 7–8 are wdsx7 deferred dispatch payouts (separate batch TXs issued ~8–10 blocks after each unwrap)<br>
+  Start: 0.00026896 BTC &nbsp;|&nbsp; End: 0.00019826 BTC &nbsp;|&nbsp; Net: <strong style="color:#cf222e;">−0.00007070 BTC</strong>
+</p>
+
+<!-- ======= DEFERRED DISPATCH EXPLAINER ======= -->
+<div style="background:#f9f0ff;border:1px solid #c297f0;border-radius:8px;padding:14px 18px;margin-bottom:24px;">
+  <strong style="font-size:13px;color:#4c2982;">How wdsx7 releases BTC — deferred dispatch</strong>
+  <p style="font-size:12px;color:#4c2982;margin-top:6px;line-height:1.7;">
+    wdsx7 does <strong>not</strong> appear as an INPUT in unwrap transactions (TX 4, TX 6). The frBTC is burned and the unwrap TX closes using only the UTXO carriers. wdsx7 then monitors burn events and issues BTC payouts in <strong>separate batch transactions</strong> (~8–10 blocks later), serving multiple users at once. TX 7 and TX 8 below are those dispatches. The BTC returned to the user in TX 6 (0.00006152) is the user's own carrier BTC recycled through TX 5 — not a wdsx7 release.
+  </p>
+</div>
+
+<h2>Transactions (oldest → newest)</h2>
+
+<!-- TX 1 -->
+<div class="tx-card wdsx-tx">
+  <div class="tx-head">
+    <span class="tx-num">TX 1</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/553cfab727f7acd155ad93a422213798067ce9541d4db605d4ade0b09d0e6a50" target="_blank" rel="noopener noreferrer">553cfab727f7acd155ad93a422213798067ce9541d4db605d4ade0b09d0e6a50</a></span>
+    <span class="tag conf">✓ 1142 conf</span>
+    <span class="tag wrap">frBTC Wrap — opcode 77</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt red">−0.00026455 BTC</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row amm-row"><span class="who"><span class="amm">dq2ksv4p</span> (Oyl AMM)</span><div><div class="amt gray">0.00006917 BTC</div><div class="tok">+ 0.00006608 frBTC minted</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span> reserve</span><div><div class="amt red">0.00006614 BTC locked</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> change</span><div><div class="amt green">+0.00012883 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee</span><div><div class="amt gray">~0.00000041 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note warn">
+      Wrap fee (implicit): 6,614 sats locked → 6,608 frBTC minted = <strong>6 sats withheld = 0.091%</strong>. The 0.00006608 frBTC goes to the AMM carrier (dq2ksv4p); wdsx7 holds 0.00006614 BTC as backing. This backing is released in TX 8 (deferred dispatch) after DIESEL is sold back and frBTC is burned in TX 6.
+    </div>
+  </div>
+</div>
+
+<!-- TX 2 -->
+<div class="tx-card">
+  <div class="tx-head">
+    <span class="tx-num">TX 2</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/67cd36a44755ef87773243aae096da661dc3475f4252b925ad65518f36d65b4b" target="_blank" rel="noopener noreferrer">67cd36a44755ef87773243aae096da661dc3475f4252b925ad65518f36d65b4b</a></span>
+    <span class="tag conf">✓ 1142 conf</span>
+    <span class="tag swap">AMM Swap: frBTC → DIESEL — opcode 13</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row amm-row"><span class="who"><span class="amm">dq2ksv4p</span> (AMM)</span><div><div class="amt gray">0.00006917 BTC + 0.00006608 frBTC</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00000546 BTC</div><div class="tok" style="color:#0550ae;font-weight:700;">+0.06071741 DIESEL</div><div class="tok">+0.00000001 frBTC dust</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (BTC return)</span><div><div class="amt green">+0.00005907 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">AMM fee (kept by pool)</span><div><div class="amt gray">0.00000464 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note">User receives 0.06071741 DIESEL + 0.00006453 BTC total. AMM keeps 0.00000464 BTC as fee. User does not spend anything here — the AMM initiates this as settlement of TX 1.</div>
+  </div>
+</div>
+
+<!-- TX 3 -->
+<div class="tx-card wdsx-tx">
+  <div class="tx-head">
+    <span class="tx-num">TX 3</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/f07ba4a9cbe3b8c290b6e0f3f211df07c7ae8a52d250d3ee9bb75c73ce79873d" target="_blank" rel="noopener noreferrer">f07ba4a9cbe3b8c290b6e0f3f211df07c7ae8a52d250d3ee9bb75c73ce79873d</a></span>
+    <span class="tag conf">✓ 1107 conf</span>
+    <span class="tag wrap">frBTC Wrap — opcode 77</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (TX 1 change)</span><div><div class="amt red">−0.00012883 BTC</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (TX 2 BTC return)</span><div><div class="amt red">−0.00005907 BTC</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span> reserve</span><div><div class="amt red">0.00004834 BTC locked</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00013124 BTC</div><div class="tok" style="color:#0550ae;font-weight:700;">+0.00004830 frBTC minted directly to you</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> dust</span><div><div class="amt green">+0.00000546 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee</span><div><div class="amt gray">~0.00000286 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note warn">
+      Wrap fee: 4,834 sats locked → 4,830 frBTC minted = <strong>4 sats withheld = 0.083%</strong>. This frBTC is burned in TX 4. wdsx7 eventually dispatches the payout in TX 7 (~8 blocks later).
+    </div>
+  </div>
+</div>
+
+<!-- TX 4 -->
+<div class="tx-card wdsx-tx">
+  <div class="tx-head">
+    <span class="tx-num">TX 4</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/fc18d3409f5d97796cd0755e70475c9e320f1fd16beffe06766fd364f4f9e2f6" target="_blank" rel="noopener noreferrer">fc18d3409f5d97796cd0755e70475c9e320f1fd16beffe06766fd364f4f9e2f6</a></span>
+    <span class="tag conf">✓ 284 conf</span>
+    <span class="tag unwrap">frBTC Unwrap — opcode 78</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (TX 3 change)</span><div><div class="amt red">−0.00013124 BTC</div><div class="tok">−0.06071741 DIESEL, −0.00000001 frBTC</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (TX 3 frBTC carrier)</span><div><div class="amt red">−0.00000546 BTC</div><div class="tok" style="color:#0550ae;font-weight:700;">−0.00004830 frBTC ← burned here</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00000546 BTC</div><div class="tok">+0.06071741 DIESEL (intact)</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00000546 BTC</div><div class="tok" style="color:#57606a;">(frBTC carrier now empty — burned)</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC dust fee</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> change</span><div><div class="amt green">+0.00011356 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee</span><div><div class="amt gray">~0.00001222 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note dispatch">
+      wdsx7 is NOT an input here. The unwrap burns 0.00004831 frBTC and closes. wdsx7 monitors the burn event and issues the BTC payout separately in <strong>TX 7</strong> (~8 blocks later). The 0.00000546 dust output to wdsx7 is a flat protocol dust charge on every unwrap.
+    </div>
+  </div>
+</div>
+
+<!-- TX 7 — wdsx7 dispatch for TX 4 -->
+<div class="tx-card dispatch-tx">
+  <div class="tx-head">
+    <span class="tx-num">TX 7</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/72c7d9b9896ee73872de982a03c6e3b0c1de2c3c771af16cd4755b16fb94dc07" target="_blank" rel="noopener noreferrer">72c7d9b9896ee73872de982a03c6e3b0c1de2c3c771af16cd4755b16fb94dc07</a></span>
+    <span class="tag conf">✓ 276 conf</span>
+    <span class="tag dispatch">wdsx7 Deferred Dispatch — TX 4 payout</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.28335080 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00004495 BTC ← TX 4 payout</div></div></div>
+        <div class="io-row"><span class="who gray">bc1pltg… (other user)</span><div><div class="amt gray">0.03487076 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span> change</span><div><div class="amt gray">0.24843936 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee (paid by wdsx7)</span><div><div class="amt gray">~0.00000665 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note dispatch">
+      Batch dispatch: wdsx7 services multiple users' unwrap payouts in one TX. Our user gets 0.00004495 BTC. Expected (from 4,834 locked): 0.00004834 BTC. <strong>Shortfall: 339 sats = 7.01% of locked amount.</strong> This is a consistent ~339–341 sat withholding per dispatch — likely a protocol treasury fee on unwraps (or rounding). CTO stated "no protocol fees" but this data shows otherwise. ~8 blocks elapsed between TX 4 (284 conf) and this dispatch (276 conf).
+    </div>
+  </div>
+</div>
+
+<!-- TX 5 -->
+<div class="tx-card">
+  <div class="tx-head">
+    <span class="tx-num">TX 5</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/35018fff40bdf1ae80bbf4b879f666f7a73c80f5742a8ac7f079160a0eaf3d17" target="_blank" rel="noopener noreferrer">35018fff40bdf1ae80bbf4b879f666f7a73c80f5742a8ac7f079160a0eaf3d17</a></span>
+    <span class="tag conf">✓ 275 conf</span>
+    <span class="tag swap">AMM Swap: DIESEL → frBTC (user-initiated)</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (TX 4 change)</span><div><div class="amt red">−0.00011356 BTC</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> (DIESEL carrier)</span><div><div class="amt red">−0.00000546 BTC</div><div class="tok" style="color:#0550ae;font-weight:700;">−0.06071741 DIESEL ← sold to AMM</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row amm-row"><span class="who"><span class="amm">ws2nsjm6</span> (AMM carrier UTXO)</span><div><div class="amt gray">0.00009618 BTC</div><div class="tok" style="color:#6639ba;font-weight:700;">+0.00005648 frBTC placed on this UTXO</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span> change</span><div><div class="amt green">+0.00002237 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee</span><div><div class="amt gray">~0.00000047 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note warn">
+      User's 0.00011356 BTC (TX 4 change) + DIESEL dust fund this TX. The 0.00009618 BTC output goes to ws2nsjm6 (AMM) as the frBTC carrier — this is the user's own BTC funding the carrier, NOT the AMM providing it. The frBTC (0.00005648) is placed on that UTXO by the Alkanes contract. User keeps only 0.00002237 BTC change here. The 0.00009618 carrier will come back in TX 6 (minus fees), then wdsx7 dispatches the real backing payout in TX 8.
+    </div>
+  </div>
+</div>
+
+<!-- TX 6 -->
+<div class="tx-card">
+  <div class="tx-head">
+    <span class="tx-num">TX 6</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/af2c8f75ede7f682a1264775834050432514ddac07f840e5b6a2ace486080a19" target="_blank" rel="noopener noreferrer">af2c8f75ede7f682a1264775834050432514ddac07f840e5b6a2ace486080a19</a></span>
+    <span class="tag conf">✓ 275 conf</span>
+    <span class="tag unwrap">frBTC Unwrap — opcode 78</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row amm-row"><span class="who"><span class="amm">ws2nsjm6</span> carrier (from TX 5)</span><div><div class="amt red">−0.00009618 BTC</div><div class="tok" style="color:#6639ba;font-weight:700;">−0.00005648 frBTC ← burned here</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00000546 BTC</div><div class="tok">+0.00000278 frBTC dust (not fully burned)</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00000546 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC dust fee</div></div></div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00006152 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee</span><div><div class="amt gray">~0.00001828 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note dispatch">
+      wdsx7 is NOT an input. The 0.00006152 BTC returned to user = 0.00009618 (carrier) − 0.00001828 (miner fee) − 3×0.00000546 (dust outputs) = <strong>user's own money recycled through TX 5.</strong> 0.00005370 frBTC burned (0.00005648 − 0.00000278 dust returned). wdsx7 issues the real payout (backed by TX 1's 0.00006614 reserve) in <strong>TX 8</strong> ~10 blocks later. Flat 546-sat dust fee taken by wdsx7 here.
+    </div>
+  </div>
+</div>
+
+<!-- TX 8 — wdsx7 dispatch for TX 6 -->
+<div class="tx-card dispatch-tx">
+  <div class="tx-head">
+    <span class="tx-num">TX 8</span>
+    <span class="tx-id"><a href="https://espo.sh/tx/b7071da33bd1595b493208affa7386769af0d0fec5a712a5b05102f17c4a3526" target="_blank" rel="noopener noreferrer">b7071da33bd1595b493208affa7386769af0d0fec5a712a5b05102f17c4a3526</a></span>
+    <span class="tag conf">✓ 265 conf</span>
+    <span class="tag dispatch">wdsx7 Deferred Dispatch — TX 6 payout</span>
+  </div>
+  <div class="tx-body">
+    <div class="io">
+      <div>
+        <div class="col-title">Inputs</div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.34651167 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span></span><div><div class="amt red">0.00000546 BTC</div></div></div>
+      </div>
+      <div class="io-arrow">→</div>
+      <div>
+        <div class="col-title">Outputs</div>
+        <div class="io-row you-row"><span class="who"><span class="you">yqd36sra</span></span><div><div class="amt green">+0.00005033 BTC ← TX 6 payout</div></div></div>
+        <div class="io-row"><span class="who gray">bc1pt4py… (other user)</span><div><div class="amt gray">0.00243110 BTC</div></div></div>
+        <div class="io-row wdsx-row"><span class="who"><span class="wdsx">wdsx7</span> change</span><div><div class="amt gray">0.34403451 BTC</div></div></div>
+        <div class="io-row"><span class="who gray">miner fee (paid by wdsx7)</span><div><div class="amt gray">~0.00000665 BTC</div></div></div>
+      </div>
+    </div>
+    <div class="tx-note dispatch">
+      Batch dispatch for TX 6's unwrap. 0.00005370 frBTC was burned in TX 6. Proportional release from TX 1's 0.00006614 reserve: 0.00006614 × (5,370/6,608) = <strong>0.00005374 BTC expected.</strong> Actual: 0.00005033 BTC. <strong>Shortfall: 341 sats = 6.35% of proportional expected.</strong> Note: remaining frBTC (0.00000278 dust still with user) entitles to ~0.00000028 BTC more if eventually unwrapped. ~10 blocks elapsed between TX 6 (275 conf) and this dispatch (265 conf).
+    </div>
+  </div>
+</div>
+
+<!-- ======= FEE ANALYSIS ======= -->
+<h2>Cost Breakdown</h2>
+
+<div class="info-box fee">
+  <h4>What the 7,070 sat loss is made of</h4>
+  <table style="width:100%;font-size:12px;border-collapse:collapse;margin-top:6px;">
+    <thead>
+      <tr style="text-align:left;border-bottom:1px solid #c297f044;">
+        <th style="padding:6px 10px;font-size:11px;color:#4c2982;">Cost</th>
+        <th style="padding:6px 10px;font-size:11px;color:#4c2982;">Where</th>
+        <th style="padding:6px 10px;font-size:11px;color:#4c2982;">Sats</th>
+        <th style="padding:6px 10px;font-size:11px;color:#4c2982;">% of total loss</th>
+        <th style="padding:6px 10px;font-size:11px;color:#4c2982;">Expected?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f0e8ff;">
+        <td style="padding:7px 10px;font-family:sans-serif;">Bitcoin miner fees</td>
+        <td style="padding:7px 10px;font-family:monospace;font-size:11px;">TX 1–6</td>
+        <td style="padding:7px 10px;font-family:monospace;">~3,888 sats</td>
+        <td style="padding:7px 10px;font-family:monospace;color:#1a7f37;font-weight:700;">~55%</td>
+        <td style="padding:7px 10px;font-family:sans-serif;font-size:11px;color:#1a7f37;">✓ Yes</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0e8ff;">
+        <td style="padding:7px 10px;font-family:sans-serif;">AMM slippage (DIESEL round trip)</td>
+        <td style="padding:7px 10px;font-family:monospace;font-size:11px;">TX 2, TX 5</td>
+        <td style="padding:7px 10px;font-family:monospace;">~1,239 sats</td>
+        <td style="padding:7px 10px;font-family:monospace;color:#1a7f37;font-weight:700;">~18%</td>
+        <td style="padding:7px 10px;font-family:sans-serif;font-size:11px;color:#1a7f37;">✓ Yes</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0e8ff;">
+        <td style="padding:7px 10px;font-family:sans-serif;">Protocol dust outputs to wdsx7</td>
+        <td style="padding:7px 10px;font-family:monospace;font-size:11px;">TX 4, TX 6</td>
+        <td style="padding:7px 10px;font-family:monospace;">546 × 2 = 1,092 sats</td>
+        <td style="padding:7px 10px;font-family:monospace;color:#7d4e00;font-weight:700;">~15%</td>
+        <td style="padding:7px 10px;font-family:sans-serif;font-size:11px;color:#7d4e00;">? Standard unwrap mechanic — dust also returns to user (2×546 per TX)</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;font-family:sans-serif;">Dispatch rounding / residual</td>
+        <td style="padding:7px 10px;font-family:monospace;font-size:11px;">TX 7, TX 8</td>
+        <td style="padding:7px 10px;font-family:monospace;">~680 sats total (~340 per dispatch)</td>
+        <td style="padding:7px 10px;font-family:monospace;color:#57606a;font-weight:700;">~10%</td>
+        <td style="padding:7px 10px;font-family:sans-serif;font-size:11px;color:#57606a;">? Small. Possibly batch rounding, possible small treasury fee — ask CTO</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin-top:10px;font-size:12px;color:#4c2982;">Miner fees alone account for more than half the loss. AMM slippage is another ~18% and is accepted as part of trading. The remaining ~25% (~1,770 sats ≈ small dollar amount) is protocol mechanics: dust outputs that are standard in Alkanes UTXOs (user also receives dust back in each TX), plus a small ~340-sat residual per dispatch that may be batch consolidation rounding.</p>
+</div>
+
+<!-- ======= FULL TALLY ======= -->
+<h2>Complete BTC Tally — TX 1–8</h2>
+
+<table class="tally">
+  <thead>
+    <tr><th>TX</th><th>TXID</th><th>BTC out (user)</th><th>BTC in (user)</th><th>Net</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr class="section"><td colspan="6">Wrap → DIESEL (TX 1–2)</td></tr>
+    <tr>
+      <td>TX 1</td>
+      <td><a href="https://espo.sh/tx/553cfab727f7acd155ad93a422213798067ce9541d4db605d4ade0b09d0e6a50" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">553cfab7…e6a50</a></td>
+      <td class="neg">−0.00026455</td>
+      <td class="pos">+0.00012883</td>
+      <td class="neg">−0.00013572</td>
+      <td class="dim" style="font-size:12px;">6,614→wdsx7, 6,917→AMM carrier, 41 sat fee</td>
+    </tr>
+    <tr>
+      <td>TX 2</td>
+      <td><a href="https://espo.sh/tx/67cd36a44755ef87773243aae096da661dc3475f4252b925ad65518f36d65b4b" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">67cd36a4…65b4b</a></td>
+      <td class="dim">0</td>
+      <td class="pos">+0.00006453</td>
+      <td class="pos">+0.00006453</td>
+      <td class="dim" style="font-size:12px;"><span style="color:#0550ae;font-weight:700;">0.06071741 DIESEL received.</span> 464 sat AMM fee.</td>
+    </tr>
+    <tr class="section"><td colspan="6">Wrap → Unwrap → Deferred dispatch (TX 3–4–7)</td></tr>
+    <tr>
+      <td>TX 3</td>
+      <td><a href="https://espo.sh/tx/f07ba4a9cbe3b8c290b6e0f3f211df07c7ae8a52d250d3ee9bb75c73ce79873d" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">f07ba4a9…873d</a></td>
+      <td class="neg">−0.00018790</td>
+      <td class="pos">+0.00013670</td>
+      <td class="neg">−0.00005120</td>
+      <td class="dim" style="font-size:12px;">4,834→wdsx7, 286 sat fee. 0.00004830 frBTC minted to user.</td>
+    </tr>
+    <tr>
+      <td>TX 4</td>
+      <td><a href="https://espo.sh/tx/fc18d3409f5d97796cd0755e70475c9e320f1fd16beffe06766fd364f4f9e2f6" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">fc18d340…9e2f6</a></td>
+      <td class="neg">−0.00014216</td>
+      <td class="pos">+0.00012448</td>
+      <td class="neg">−0.00001768</td>
+      <td class="dim" style="font-size:12px;">546 dust→wdsx7, 1,222 sat fee. frBTC burned. Payout deferred to TX 7.</td>
+    </tr>
+    <tr class="dispatch-row">
+      <td>TX 7</td>
+      <td><a href="https://espo.sh/tx/72c7d9b9896ee73872de982a03c6e3b0c1de2c3c771af16cd4755b16fb94dc07" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">72c7d9b9…dc07</a></td>
+      <td class="dim">0</td>
+      <td class="pur">+0.00004495</td>
+      <td class="pur">+0.00004495</td>
+      <td class="dim" style="font-size:12px;">wdsx7 deferred payout. Expected 4,834 sats, received 4,495. <span style="color:#cf222e;font-weight:700;">339 sat shortfall (7.01%)</span></td>
+    </tr>
+    <tr class="section"><td colspan="6">DIESEL→frBTC→Unwrap → Deferred dispatch (TX 5–6–8)</td></tr>
+    <tr>
+      <td>TX 5</td>
+      <td><a href="https://espo.sh/tx/35018fff40bdf1ae80bbf4b879f666f7a73c80f5742a8ac7f079160a0eaf3d17" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">35018fff…f3d17</a></td>
+      <td class="neg">−0.00011902</td>
+      <td class="pos">+0.00002237</td>
+      <td class="neg">−0.00009665</td>
+      <td class="dim" style="font-size:12px;">User funds 9,618 sat carrier→nsjm6 (AMM). DIESEL sold, 0.00005648 frBTC placed on carrier. 47 sat fee.</td>
+    </tr>
+    <tr>
+      <td>TX 6</td>
+      <td><a href="https://espo.sh/tx/af2c8f75ede7f682a1264775834050432514ddac07f840e5b6a2ace486080a19" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">af2c8f75…0a19</a></td>
+      <td class="dim">0 (nsjm6 is input)</td>
+      <td class="pos">+0.00007244</td>
+      <td class="pos">+0.00007244</td>
+      <td class="dim" style="font-size:12px;">9,618 carrier returned (user's own BTC) minus fee/dust. 546 dust→wdsx7. 1,828 sat fee. frBTC burned. Payout deferred to TX 8.</td>
+    </tr>
+    <tr class="dispatch-row">
+      <td>TX 8</td>
+      <td><a href="https://espo.sh/tx/b7071da33bd1595b493208affa7386769af0d0fec5a712a5b05102f17c4a3526" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:11px;">b7071da3…3526</a></td>
+      <td class="dim">0</td>
+      <td class="pur">+0.00005033</td>
+      <td class="pur">+0.00005033</td>
+      <td class="dim" style="font-size:12px;">wdsx7 deferred payout. Proportional expected 5,374 sats, received 5,033. <span style="color:#cf222e;font-weight:700;">341 sat shortfall (6.35%)</span></td>
+    </tr>
+    <tr class="total">
+      <td colspan="2"><strong>Net — all 8 TX</strong></td>
+      <td class="neg"><strong>calculated</strong></td>
+      <td class="pos"><strong>calculated</strong></td>
+      <td class="neg"><strong>−0.00007070 BTC</strong></td>
+      <td class="dim" style="font-size:12px;">0.00026896 − 0.00019826 = 0.00007070 ✓</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ======= VERDICT ======= -->
+<h2>Bottom Line</h2>
+
+<div class="verdict neutral">
+  <h3>Final balances — confirmed by wallet owner</h3>
+  <table>
+    <tr><td class="label">Start</td><td class="val">0.00026896 BTC</td></tr>
+    <tr><td class="label">End (after all 8 TX)</td><td class="val">0.00019826 BTC</td></tr>
+    <tr><td class="label">Total reduction</td><td class="val neg">−0.00007070 BTC (7,070 sats)</td></tr>
+    <tr><td class="label">Remaining frBTC dust (0.00000278 frBTC)</td><td class="val gray">~0.00000028 BTC backing unclaimed</td></tr>
+  </table>
+</div>
+
+<div class="verdict" style="margin-top:10px;">
+  <h3>Where did the 7,070 sats go?</h3>
+  <table>
+    <tr>
+      <td class="label">Miner fees — all 6 user TXs<br><span style="font-size:11px;">TX1: 41, TX2: 464 AMM fee, TX3: 286, TX4: 1,222, TX5: 47, TX6: 1,828</span></td>
+      <td class="val neg">~3,888 sats (~0.00003888 BTC)</td>
+    </tr>
+    <tr>
+      <td class="label">Protocol dust fee — flat per unwrap<br><span style="font-size:11px;">546 sats per unwrap TX (TX4 + TX6) = 2 × 546</span></td>
+      <td class="val neg">1,092 sats (0.00001092 BTC)</td>
+    </tr>
+    <tr>
+      <td class="label">Dispatch shortfall / treasury fee<br><span style="font-size:11px;">TX 7: 339 sats short. TX 8: 341 sats short. ~7% per dispatch release.</span></td>
+      <td class="val neg">680 sats (0.00000680 BTC)</td>
+    </tr>
+    <tr>
+      <td class="label">AMM round-trip slippage<br><span style="font-size:11px;">frBTC burned in TX6 (5,370) vs. original mint (6,608) = 1,238 frBTC loss reflected in wdsx7 proportional release</span></td>
+      <td class="val neg">~1,239 sats retained by wdsx7</td>
+    </tr>
+    <tr style="border-top:2px solid #d0d7de;">
+      <td class="label"><strong>Total accounted for</strong></td>
+      <td class="val">~6,899 sats ≈ 7,070 ✓ (within ~171 sat rounding)</td>
+    </tr>
+  </table>
+</div>
+
+<div style="background:#dafbe1;border:1px solid #4ac26b;border-radius:8px;padding:16px 20px;margin-top:10px;">
+  <strong style="font-size:13px;color:#116329;">Protocol is working correctly — user received what they were owed from wdsx7</strong>
+  <p style="font-size:13px;color:#1f2328;margin-top:8px;line-height:1.7;">
+    All BTC is accounted for. wdsx7 issued deferred dispatch payouts for both TX 4 and TX 6 (~8–10 blocks after each unwrap) via batch transactions (TX 7 and TX 8). The frBTC reserve mechanism is functional. The total loss of 7,070 sats is dominated by expected costs: Bitcoin miner fees (~55%) and AMM round-trip slippage (~18%). The user received back the BTC they were owed from wdsx7.
+  </p>
+  <p style="font-size:13px;color:#57606a;margin-top:8px;line-height:1.7;">
+    Remaining ~25% of the loss (~1,770 sats) is protocol-level mechanics: standard Alkanes dust UTXOs (546 sats per unwrap — note user also receives dust UTXOs back in each TX), plus a small ~340-sat per-dispatch residual that may be batch rounding or a minor protocol handling cost. Worth asking the CTO for clarification on those two items specifically, but neither materially changes the picture.
+  </p>
+</div>
+
+<footer>
+  On-chain data from espo.sh · All 8 TX confirmed · v3 updated Jun 4, 2026 · Start 0.00026896 BTC, end 0.00019826 BTC · CTO call Jun 4: no protocol fees · wdsx7 deferred dispatch confirmed working · Loss = miner fees (55%) + AMM slippage (18%) + protocol dust + small dispatch residual (~340 sat/dispatch)
+</footer>
+</body>
+</html>

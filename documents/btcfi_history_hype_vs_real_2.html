@@ -1,0 +1,243 @@
+
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+.era{margin-bottom:2.5rem}
+.era-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.era-year{font-size:13px;font-weight:500;color:var(--color-text-secondary);min-width:60px}
+.era-title{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.era-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;margin-left:auto;white-space:nowrap}
+.badge-real{background:#E1F5EE;color:#0F6E56}
+.badge-hype{background:#FAECE7;color:#993C1D}
+.badge-mixed{background:#FAEEDA;color:#633806}
+.badge-infra{background:#E6F1FB;color:#0C447C}
+@media(prefers-color-scheme:dark){
+  .badge-real{background:#085041;color:#9FE1CB}
+  .badge-hype{background:#4A1B0C;color:#F5C4B3}
+  .badge-mixed{background:#412402;color:#FAC775}
+  .badge-infra{background:#042C53;color:#B5D4F4}
+}
+.timeline-line{border-left:2px solid var(--color-border-secondary);margin-left:28px;padding-left:20px}
+.event{margin-bottom:14px;position:relative}
+.event::before{content:'';position:absolute;left:-27px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--color-border-primary);flex-shrink:0}
+.event-real::before{background:#1D9E75}
+.event-hype::before{background:#D85A30}
+.event-neutral::before{background:#888780}
+.event-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.event-body{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem}
+.verdict-card{padding:10px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+.verdict-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.verdict-real{color:#0F6E56}.verdict-hype-label{color:#993C1D}
+@media(prefers-color-scheme:dark){.verdict-real{color:#9FE1CB}.verdict-hype-label{color:#F5C4B3}}
+.verdict-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:2rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--color-text-tertiary);text-transform:uppercase;margin-bottom:1.5rem}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin:1rem 0}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;flex:1;min-width:140px}
+.stat-num{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.stat-label{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.problem-item{font-size:12px;color:var(--color-text-secondary);padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;gap:10px;align-items:flex-start}
+.problem-item:last-child{border-bottom:none}
+.dot-real{width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-top:5px}
+.dot-hype{width:6px;height:6px;border-radius:50%;background:#D85A30;flex-shrink:0;margin-top:5px}
+.dot-neutral{width:6px;height:6px;border-radius:50%;background:#888780;flex-shrink:0;margin-top:5px}
+</style>
+
+<div style="padding:1rem 0">
+
+<p class="section-label">The full arc of BTCfi</p>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2009–2020</span>
+    <span class="era-title">Bitcoin does one thing, intentionally</span>
+    <span class="era-badge badge-real">Foundation</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-neutral">
+      <div class="event-title">Bitcoin Script — deliberately limited</div>
+      <div class="event-body">Satoshi built Bitcoin with a non-Turing-complete scripting language on purpose. No loops, no general computation. The philosophy: Bitcoin is a store of value and settlement layer. Don't over-engineer it. This conservatism is both Bitcoin's greatest strength and the core tension with DeFi.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">wBTC launches (2019) — the original "BTCfi"</div>
+      <div class="event-body">Wrapped Bitcoin goes live on Ethereum. BitGo holds the real BTC, mints ERC-20 tokens. Suddenly BTC can be used in Uniswap, Aave, Compound. By 2021 wBTC peaks at ~$10B TVL. This IS real — billions of real BTC utility unlocked. But the trust trade-off is enormous: you trust BitGo entirely.</div>
+    </div>
+    <div class="event event-hype">
+      <div class="event-title">RSK / Rootstock — "smart contracts on Bitcoin" (2018)</div>
+      <div class="event-body">Early sidechain with EVM, two-way BTC peg. The vision was right but adoption never came. The peg required federation trust, UX was rough, liquidity never materialized. A warning sign for what "Bitcoin DeFi" looks like when the product exists but the users don't come.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2021</span>
+    <span class="era-title">Taproot — the real upgrade everyone ignored</span>
+    <span class="era-badge badge-infra">Infrastructure</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-real">
+      <div class="event-title">Taproot + Schnorr activate (Nov 2021)</div>
+      <div class="event-body">Bitcoin's biggest protocol upgrade since SegWit. Schnorr signatures enable key aggregation: a 10-of-15 multisig looks like a single signature on-chain (privacy + efficiency). Tapscript allows complex spending conditions revealed only when used. This quietly laid the cryptographic foundation for everything that came after — FROST threshold multisigs, covenants research, Taproot Assets.</div>
+    </div>
+    <div class="event event-neutral">
+      <div class="event-title">Media barely covered it</div>
+      <div class="event-body">While NFTs and the Ethereum bull run dominated headlines, Taproot activated with a whimper. Most Bitcoin users didn't notice. But every serious BTCfi protocol built since 2022 uses it. It's the most underrated upgrade in Bitcoin history.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2023 Q1</span>
+    <span class="era-title">Ordinals — the culture shock that changed everything</span>
+    <span class="era-badge badge-mixed">Hype + Real</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-real">
+      <div class="event-title">Casey Rodarmor releases the Ordinals protocol (Jan 2023)</div>
+      <div class="event-body">Arbitrary data — images, text, HTML, video — inscribed in Bitcoin transaction witness fields. Technically not a protocol change: it exploits SegWit's discounted witness space. Bitcoin NFTs are born. The cultural impact is undeniable: Bitcoin becomes interesting to a new generation of builders and collectors who had never cared about it before.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">Inscriptions prove Bitcoin can hold data durably</div>
+      <div class="event-body">This was the proof of concept for everything that followed. If you can inscribe an image permanently in Bitcoin, you can inscribe WASM bytecode. The entire metaprotocol stack (Runes, Alkanes, BRC2.0) depends on this insight. Real technical foundation.</div>
+    </div>
+    <div class="event event-hype">
+      <div class="event-title">Bitcoin NFT market mania</div>
+      <div class="event-body">Collections like Bitcoin Punks, Taproot Wizards, Ordinal Maxi Biz drove fees sky-high. Block sizes doubled. Average transaction fees spiked 10×. Maxis were furious — "data spam on a payments network." The NFT market itself largely collapsed like every other NFT cycle: most collections are near-worthless today. The lasting value was not the JPEGs but the proof that the data layer works.</div>
+    </div>
+  </div>
+  <div class="verdict-grid">
+    <div class="verdict-card">
+      <div class="verdict-label verdict-real">What was real</div>
+      <div class="verdict-text">The data storage mechanism. Proven durable inscription of arbitrary data on Bitcoin L1, secured by Bitcoin's full hash rate. The cultural influx of builders.</div>
+    </div>
+    <div class="verdict-card">
+      <div class="verdict-label verdict-hype-label">What was hype</div>
+      <div class="verdict-text">The NFT valuations. 99% of inscription collections followed the exact same pump-and-dump arc as ETH NFTs. Different chain, same human behavior.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2023 Q2</span>
+    <span class="era-title">BRC-20 — fungible tokens arrive, chaos follows</span>
+    <span class="era-badge badge-hype">Mostly hype</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-hype">
+      <div class="event-title">Domo publishes the BRC-20 experiment (Mar 2023)</div>
+      <div class="event-body">A JSON inscription standard to simulate ERC-20 tokens on Bitcoin. Domo himself called it an "experiment." Within weeks, thousands of tokens were created. The first — ORDI — hit a $1B+ market cap. Meme tokens like PEPE, RATS, SATS followed, each with billion-dollar valuations at peak. Bitcoin blocks filled up. Average fees reached $30+ per transaction for weeks.</div>
+    </div>
+    <div class="event event-hype">
+      <div class="event-title">The indexer wars</div>
+      <div class="event-body">BRC-20 has no on-chain enforcement. Your "balance" only exists in an off-chain indexer's database. When Unisat (the dominant marketplace) disagreed with Domo about a protocol upgrade in early 2024, BRC-20 nearly split into two incompatible standards on the same blockchain. This exposed the fundamental fragility: billions in market cap rested on social consensus, not code.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">Fee revenue windfall for miners</div>
+      <div class="event-body">The one unambiguous winner: miners earned record fees. During the BRC-20 peak, fees exceeded block subsidy multiple times. For a network worried about long-term miner revenue post-halving, this was genuinely important data. Inscriptions proved the demand for Bitcoin blockspace exists beyond simple payments.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2024 Apr</span>
+    <span class="era-title">Runes launch at the halving — cleaner token standard</span>
+    <span class="era-badge badge-mixed">Real + Speculative</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-real">
+      <div class="event-title">Casey Rodarmor ships Runes protocol at block 840,000</div>
+      <div class="event-body">A deliberately UTXO-native fungible token standard. No inscription "dust" problem. No off-chain indexer ambiguity. Tokens stored directly in UTXO outputs using OP_RETURN Runestones. Technically cleaner than BRC-20 in almost every way — better for wallets, better for miners, less blockspace waste. This is genuinely real infrastructure.</div>
+    </div>
+    <div class="event event-hype">
+      <div class="event-title">Launch day chaos — pure speculation</div>
+      <div class="event-body">The first Rune mints clogged the mempool on halving day. Fees hit record highs briefly. The "Runes season" narrative drove massive speculation on ticker names. Most of the excitement was about meme tokens again, not the underlying technical improvement. The speculative froth died within months; lasting Runes ecosystem is still forming.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">Alkanes enters development (Protorunes → Alkanes)</div>
+      <div class="event-body">Built on top of the Runes spec, Alkanes adds WASM smart contracts. Any language that compiles to WASM (Rust, C, AssemblyScript) can be deployed as a Bitcoin-native smart contract, inscribed via witness envelopes, indexed by Metashrew. The creator (Flex / kungfuflex) is SUBFROST's CTO. This is real, novel infrastructure — not another token standard.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2024</span>
+    <span class="era-title">The wBTC crisis — trust becomes the central problem</span>
+    <span class="era-badge badge-real">Wake-up call</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-hype">
+      <div class="event-title">BitGo announces custody transfer to BiT Global (Aug 2024)</div>
+      <div class="event-body">BiT Global is partly owned by Justin Sun. The DeFi community panicked. Aave governance voted to reduce wBTC collateral ratios. Sky/MakerDAO began migrating away. wBTC's share of tokenized Bitcoin supply dropped from 1.5% to 0.74% of all circulating BTC — a massive vote of no-confidence via user exit.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">The real problem: ALL wrapped BTC requires trust</div>
+      <div class="event-body">wBTC, BTCB (Binance), cbBTC (Coinbase) — every solution requires you to trust a centralized custodian. The renBTC collapse during FTX (its parent company Alameda went bankrupt) should have been the final lesson. The entire "BTCfi" narrative until now had been built on a fundamental contradiction: using Bitcoin in DeFi by trusting centralized entities with your Bitcoin. The community finally started taking this seriously.</div>
+    </div>
+  </div>
+</div>
+
+<div class="era">
+  <div class="era-header">
+    <span class="era-year">2024–25</span>
+    <span class="era-title">Babylon — native BTC staking, for real</span>
+    <span class="era-badge badge-real">Genuinely real</span>
+  </div>
+  <div class="timeline-line">
+    <div class="event event-real">
+      <div class="event-title">Babylon launches BTC staking on mainnet (Aug 2024)</div>
+      <div class="event-body">First Phase-1 cap: 1,000 BTC filled in 74 minutes. No bridges, no wrapping. BTC stays on Bitcoin L1 in a self-custodial timelock script. Covenants (6-of-9 committee multisig) handle unbonding. Phase-1 hit ~23,000 BTC (~$1.4B) staked. The concept: use staked BTC to provide cryptoeconomic security to PoS chains, earn yield in return. This is architecturally novel.</div>
+    </div>
+    <div class="event event-mixed">
+      <div class="event-title" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Phase-1 caveat: yield wasn't live yet</div>
+      <div class="event-body">In Phase-1, stakers locked BTC but earned no yield — just points and anticipation of BABY token rewards. The "staking" was really a deposit with a promise. Phase-2 launched April 2025, introducing the BABY token and real PoS security. Phase-3 (multi-staking, trustless vaults via BitVM3) is the vision that would make this truly transformative.</div>
+    </div>
+    <div class="event event-real">
+      <div class="event-title">Babylon introduces trustless BTC vaults (Aug 2025)</div>
+      <div class="event-body">Using BitVM3 (garbled circuits for off-chain computation, fraud proofs on-chain), Babylon proposes programmable BTC vaults — native BTC as collateral in DeFi without bridges. Withdrawals only permitted when a ZK proof of the contract state is verified on Bitcoin. A16z invested $15M in Jan 2026. This is the most technically credible approach to trustless BTCfi yet.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<p class="section-label">Where things stand now (May 2026)</p>
+
+<div class="stat-row">
+  <div class="stat">
+    <div class="stat-num">$8.6B</div>
+    <div class="stat-label">BTCfi TVL (mid-2025)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">0.8%</div>
+    <div class="stat-label">Of all BTC in DeFi</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">62%</div>
+    <div class="stat-label">BTC unmoved 1+ year</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">22×</div>
+    <div class="stat-label">TVL growth in 2024</div>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem">
+  <div class="section-label">Honest hype vs reality scorecard</div>
+  <div class="problem-item"><span class="dot-real"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Real: Bitcoin as data storage layer.</strong> Ordinals proved it. Alkanes built on it. The mechanism is sound and Bitcoin-native. WASM contracts on L1 are technically real.</div></div>
+  <div class="problem-item"><span class="dot-real"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Real: Babylon-style native BTC staking.</strong> Self-custodial, no bridges, cryptographically constrained. The architecture is novel and the demand was validated instantly (1,000 BTC cap in 74 minutes).</div></div>
+  <div class="problem-item"><span class="dot-real"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Real: The scale of dormant capital.</strong> 0.8% of BTC in DeFi means the upside is genuinely enormous if even 5% gets put to work. The market opportunity is real.</div></div>
+  <div class="problem-item"><span class="dot-hype"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Hype: "Trustless" wrapped BTC on other chains.</strong> wBTC, cbBTC, BTCB — all require custodians. "Decentralized" alternatives like tBTC are technically better but still require you to trust a committee or a cryptographic scheme that hasn't been tested at scale under adversarial conditions.</div></div>
+  <div class="problem-item"><span class="dot-hype"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Hype: BRC-20 / Runes token valuations.</strong> The standards are real; the meme token market caps were not. ORDI's $1B+ market cap had no fundamental basis. This is the same dynamic as ERC-20 ICOs in 2017 — real infrastructure, speculative valuations.</div></div>
+  <div class="problem-item"><span class="dot-hype"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Hype: "Bitcoin yield" narratives.</strong> Most BTCfi "yield" in 2024–2025 was point farming with no underlying economic basis — protocols collecting deposits in exchange for future token airdrop promises. When the airdrop lands and the APY drops to real rates (2–5%), most capital leaves.</div></div>
+  <div class="problem-item"><span class="dot-neutral"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Jury's out: Alkanes / SUBFROST L1 smart contracts.</strong> Technically sound. The metaprotocol approach is clever — all state is verifiable by replaying WASM against Bitcoin chaindata. But the indexer is the consensus — if major indexers disagree, you get a split. Real product risk that BRC-20 demonstrated viscerally.</div></div>
+  <div class="problem-item"><span class="dot-neutral"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Jury's out: BitVM / covenants.</strong> BitVM2/3 is the most promising path to truly trustless BTC bridges and programmability at the base layer. But it's computationally expensive, complex to implement, and has never been stress-tested with large capital. The theory is brilliant; production-grade deployment is years away.</div></div>
+  <div class="problem-item"><span class="dot-neutral"></span><div><strong style="font-size:12px;color:var(--color-text-primary)">Jury's out: "Bitcoin as DeFi reserve asset."</strong> The thesis that Bitcoin staking yield becomes the global risk-free rate is intellectually interesting but so far ahead of current reality it's basically a thought experiment. Ethereum's DeFi TVL is still 20× Bitcoin's. That gap doesn't close quickly.</div></div>
+</div>
+
+</div>
