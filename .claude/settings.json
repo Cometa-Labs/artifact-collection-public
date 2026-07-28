@@ -1,0 +1,7 @@
+{
+  "skills": [
+    ".claude/skills/init-project",
+    ".claude/skills/clean-init",
+    ".claude/skills/skill-creator"
+  ]
+}
