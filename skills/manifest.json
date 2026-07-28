@@ -10,5 +10,17 @@
     "outputs": ["Per-TX flow breakdown (wrap/swap/unwrap/dispatch classification)", "Expected vs actual payout deltas", "Cost breakdown by category (miner fees, AMM slippage, dust, residual)", "Net BTC flow summary"],
     "relatedArtifacts": ["btc-flow-analysis"],
     "tags": ["Bitcoin", "BTCFi", "Flow Analysis", "Audit"]
+  },
+  {
+    "slug": "btcfi-hype-vs-real-rubric",
+    "name": "BTCfi Hype vs Real Rubric",
+    "indexCode": "SKILL-002",
+    "category": "Market",
+    "summary": "Classify a BTCfi claim, protocol, or narrative as Real, Hype, or Mixed using a checklist derived from BTCfi's history (trust/custody, valuation-vs-mechanism, adversarial testing, indexer fragility).",
+    "whenToUse": "Use when asked whether a new Bitcoin-DeFi project, yield narrative, or 'trustless' bridge claim is substantive infrastructure or speculative froth.",
+    "inputs": ["Description of the BTCfi protocol/claim/narrative to evaluate", "Any stated valuations, TVL, or yield figures", "Any custody/trust model details"],
+    "outputs": ["One-line mechanism description", "Answers to the four checks (trust/custody, valuation-vs-mechanism, adversarial/scale test, indexer fragility)", "Verdict: Real / Hype / Mixed, with what's-real and what's-hype lines"],
+    "relatedArtifacts": ["btcfi-history-hype-vs-real"],
+    "tags": ["Bitcoin", "BTCFi", "Market Analysis", "Due Diligence"]
   }
 ]

@@ -44,3 +44,12 @@ If you see wrap → (swap →)* unwrap, with no payout in the unwrap TX itself, 
 - Dispatch reconciliation table: unwrap TX → expected payout → actual payout → shortfall (sats, %) → verdict (expected/unexplained).
 - Cost breakdown table: category → sats → % of total loss → expected or not.
 - One paragraph net summary, leading with the largest cost driver.
+
+## Automating the trace
+
+This procedure needs two data sources, because it's a metaprotocol on top of Bitcoin:
+
+1. **A Bitcoin explorer API** (Esplora-style REST, e.g. mempool.space or Blockstream) for raw transaction data — inputs, outputs, amounts, fees, confirmations. This alone tells you *nothing* about frBTC or wdsx7 reserves; it only sees plain BTC UTXOs.
+2. **An Alkanes/Metashrew indexer** for protocol-level state — frBTC mint/burn amounts per TX, which outputs are wdsx7 reserve locks, and the link between an unwrap TX and its later deferred-dispatch TX. This state only exists because it's computed by replaying witness-envelope WASM execution against Bitcoin chaindata; no generic Bitcoin explorer (including Blockfrost, which doesn't serve Bitcoin at all) exposes it.
+
+`scripts/trace.py` sketches the fetch-and-classify shape: pull an address's TXs from the explorer, annotate each with Alkanes state from the indexer, classify wrap/swap/unwrap/dispatch by inspecting inputs/outputs (not labels), and compute wrap fees per step 2. The dispatch-matching and expected-vs-actual payout logic (steps 3–5) is left as a stub since it depends on your specific indexer's schema for linking an unwrap to its dispatch TX — treat the script as scaffolding to adapt, not a drop-in tool.
