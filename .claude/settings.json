@@ -1,6 +1,6 @@
 {
   "skills": [
-    ".claude/skills/skill-creator",
-    ".claude/skills/html-artifact-audit"
+    ".claude/skills/html-artifact-audit",
+    ".claude/skills/skill-extraction"
   ]
 }

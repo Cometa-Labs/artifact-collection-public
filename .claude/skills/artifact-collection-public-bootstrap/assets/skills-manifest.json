@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "frbtc-flow-tracing",
+    "name": "frBTC Wrap/Unwrap Flow Tracing",
+    "indexCode": "SKILL-001",
+    "category": "Research",
+    "summary": "Trace a chain of frBTC wrap/swap/unwrap/dispatch transactions to compute net BTC flow, expected vs actual payouts, and flag undisclosed fees.",
+    "whenToUse": "Use when auditing a Bitcoin address's wdsx7/frBTC/Alkanes transaction history to verify wrap fees, deferred dispatch payouts, and whether stated 'no fee' claims hold up against on-chain data.",
+    "inputs": ["Address's transaction list (TXIDs, confirmations)", "Per-TX inputs/outputs with BTC and frBTC amounts", "Any protocol fee claims to verify"],
+    "outputs": ["Per-TX flow breakdown (wrap/swap/unwrap/dispatch classification)", "Expected vs actual payout deltas", "Cost breakdown by category (miner fees, AMM slippage, dust, residual)", "Net BTC flow summary"],
+    "relatedArtifacts": ["btc-flow-analysis"],
+    "tags": ["Bitcoin", "BTCFi", "Flow Analysis", "Audit"]
+  }
+]
