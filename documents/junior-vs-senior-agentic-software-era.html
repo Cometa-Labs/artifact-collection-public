@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Junior vs Senior Task Execution Model</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #f6f7fb; color: #1f2937; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 20px; }
+  h1 { margin: 0 0 8px; font-size: 28px; }
+  p.sub { margin-top: 0; color: #4b5563; }
+  .grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+  .panel { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 16px; }
+  .controls { position: sticky; top: 12px; }
+  .control { margin-bottom: 14px; }
+  .control label { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .control .hint { font-weight: 400; color: #6b7280; font-size: 12px; }
+  input[type=range] { width: 100%; }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(120px,1fr)); gap: 12px; margin-bottom: 16px; }
+  .card { background: #fff; border-radius: 10px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .card .k { font-size: 12px; color: #6b7280; }
+  .card .v { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  canvas { width: 100%; height: 320px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; }
+  .chart-wrap { margin-bottom: 18px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; margin-bottom: 8px; color: #374151; }
+  .legend span::before { content: ''; display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 2px; vertical-align: -1px; }
+  .blue::before { background: #2563eb; }
+  .green::before { background: #059669; }
+  .red::before { background: #dc2626; }
+  .orange::before { background: #ea580c; }
+  .purple::before { background: #7c3aed; }
+  .gray::before { background: #6b7280; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  .note { color: #4b5563; font-size: 13px; line-height: 1.45; }
+  .small { font-size: 12px; color: #6b7280; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } .controls { position: static; } .cards { grid-template-columns: repeat(2, minmax(120px,1fr)); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Junior vs Senior Task Execution Model</h1>
+  <p class="sub">Interactive sliders for salary-response assumptions, hours, bug load, and relative junior capacity.</p>
+  <div class="grid">
+    <div class="panel controls">
+      <div class="control"><label>Junior full capacity α <span id="alphaVal"></span></label><input id="alpha" type="range" min="0.2" max="1" step="0.01" value="0.6"></div>
+      <div class="control"><label>Senior bug multiplier βₛ <span id="betaSVal"></span></label><input id="betaS" type="range" min="0" max="1" step="0.01" value="0.2"></div>
+      <div class="control"><label>Junior bug multiplier βⱼ <span id="betaJVal"></span></label><input id="betaJ" type="range" min="0" max="1.5" step="0.01" value="0.5"></div>
+      <div class="control"><label>Senior baseline capacity bₛ <span id="bsVal"></span></label><input id="bs" type="range" min="0.3" max="1" step="0.01" value="0.7"></div>
+      <div class="control"><label>Junior baseline activation bⱼ <span id="bjVal"></span></label><input id="bj" type="range" min="0.1" max="1" step="0.01" value="0.5"></div>
+      <div class="control"><label>Senior full activation rₛ <span id="rsVal"></span><span class="hint">salary multiple over market</span></label><input id="rs" type="range" min="1" max="3" step="0.01" value="1.7"></div>
+      <div class="control"><label>Junior full activation rⱼ <span id="rjVal"></span><span class="hint">salary multiple over market</span></label><input id="rj" type="range" min="1" max="2" step="0.01" value="1.1"></div>
+      <div class="control"><label>Junior max hours hⱼ max <span id="hjMaxVal"></span></label><input id="hjMax" type="range" min="8" max="16" step="0.1" value="12"></div>
+      <div class="control"><label>Junior overtime saturates at uⱼ <span id="ujVal"></span></label><input id="uj" type="range" min="1" max="2" step="0.01" value="1.1"></div>
+      <div class="control"><label>Senior market salary Mₛ <span id="MsVal"></span></label><input id="Ms" type="range" min="50000" max="400000" step="5000" value="180000"></div>
+      <div class="control"><label>Junior market salary Mⱼ <span id="MjVal"></span></label><input id="Mj" type="range" min="30000" max="250000" step="5000" value="90000"></div>
+      <div class="control"><label>Chosen senior salary multiple xₛ <span id="xsVal"></span></label><input id="xs" type="range" min="0.5" max="3" step="0.01" value="1"></div>
+      <div class="control"><label>Chosen junior salary multiple xⱼ <span id="xjVal"></span></label><input id="xj" type="range" min="0.5" max="2" step="0.01" value="1.1"></div>
+      <div class="small">Model: Q = capacity × hours / (1 + bug multiplier), and cost per output = salary / Q.</div>
+    </div>
+    <div>
+      <div class="cards">
+        <div class="card"><div class="k">Senior output Qₛ</div><div class="v" id="QsOut"></div></div>
+        <div class="card"><div class="k">Junior output Qⱼ</div><div class="v" id="QjOut"></div></div>
+        <div class="card"><div class="k">Senior cost per output Kₛ</div><div class="v" id="KsOut"></div></div>
+        <div class="card"><div class="k">Junior cost per output Kⱼ</div><div class="v" id="KjOut"></div></div>
+      </div>
+      <div class="panel chart-wrap">
+        <div class="legend"><span class="blue">Senior capacity</span><span class="green">Junior capacity</span><span class="orange">Senior hours</span><span class="purple">Junior hours</span></div>
+        <canvas id="capacityChart" width="900" height="320"></canvas>
+      </div>
+      <div class="panel chart-wrap">
+        <div class="legend"><span class="blue">Senior output Q</span><span class="green">Junior output Q</span></div>
+        <canvas id="outputChart" width="900" height="320"></canvas>
+      </div>
+      <div class="panel chart-wrap">
+        <div class="legend"><span class="red">Senior cost per output K</span><span class="orange">Junior cost per output K</span></div>
+        <canvas id="costChart" width="900" height="320"></canvas>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Metric</th><th>Senior</th><th>Junior</th></tr></thead>
+          <tbody>
+            <tr><td>Offered salary</td><td id="salS"></td><td id="salJ"></td></tr>
+            <tr><td>Capacity</td><td id="capS"></td><td id="capJ"></td></tr>
+            <tr><td>Hours</td><td id="hrsS"></td><td id="hrsJ"></td></tr>
+            <tr><td>Net output Q</td><td id="tblQs"></td><td id="tblQj"></td></tr>
+            <tr><td>Cost per output K</td><td id="tblKs"></td><td id="tblKj"></td></tr>
+          </tbody>
+        </table>
+        <p class="note" id="summary"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const ids = ['alpha','betaS','betaJ','bs','bj','rs','rj','hjMax','uj','Ms','Mj','xs','xj'];
+const fmtMoney = n => '$' + Math.round(n).toLocaleString();
+const fmt = (n, d=2) => Number(n).toFixed(d);
+const get = id => parseFloat(document.getElementById(id).value);
+function ramp(x, b, r) {
+  if (x <= 1) return b;
+  if (x >= r) return 1;
+  if (r === 1) return 1;
+  return b + (1 - b) * (x - 1) / (r - 1);
+}
+function seniorCapacity(x, bs, rs) { return ramp(x, bs, rs); }
+function juniorCapacity(x, alpha, bj, rj) { return alpha * ramp(x, bj, rj); }
+function seniorHours() { return 8; }
+function juniorHours(x, hjMax, uj) {
+  if (x <= 1) return 8;
+  if (x >= uj) return hjMax;
+  if (uj === 1) return hjMax;
+  return 8 + (hjMax - 8) * (x - 1) / (uj - 1);
+}
+function output(cap, hrs, beta) { return cap * hrs / (1 + beta); }
+function costPerOutput(salary, q) { return salary / q; }
+
+function drawChart(canvasId, series, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const pad = {l: 55, r: 20, t: 20, b: 35};
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,w,h);
+  const xMin = opts.xMin ?? 0.5, xMax = opts.xMax ?? 3.0;
+  let yMin = opts.yMin, yMax = opts.yMax;
+  if (yMin === undefined || yMax === undefined) {
+    const vals = series.flatMap(s => s.data.map(p => p.y)).filter(v => Number.isFinite(v));
+    yMin = Math.min(...vals); yMax = Math.max(...vals);
+    if (yMin === yMax) { yMin = 0; yMax = yMax + 1; }
+    const padY = (yMax - yMin) * 0.08 || 1;
+    yMin = Math.max(0, yMin - padY);
+    yMax = yMax + padY;
+  }
+  const xToPx = x => pad.l + (x - xMin) / (xMax - xMin) * (w - pad.l - pad.r);
+  const yToPx = y => h - pad.b - (y - yMin) / (yMax - yMin) * (h - pad.t - pad.b);
+
+  ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) {
+    const y = yMin + i*(yMax-yMin)/5;
+    const py = yToPx(y);
+    ctx.beginPath(); ctx.moveTo(pad.l,py); ctx.lineTo(w-pad.r,py); ctx.stroke();
+    ctx.fillStyle = '#6b7280'; ctx.font = '12px Arial'; ctx.fillText(fmt(y,2), 5, py+4);
+  }
+  for (let i=0;i<=5;i++) {
+    const x = xMin + i*(xMax-xMin)/5;
+    const px = xToPx(x);
+    ctx.beginPath(); ctx.moveTo(px,pad.t); ctx.lineTo(px,h-pad.b); ctx.stroke();
+    ctx.fillStyle = '#6b7280'; ctx.fillText(fmt(x,2)+'x', px-12, h-10);
+  }
+  ctx.strokeStyle = '#111827'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,h-pad.b); ctx.lineTo(w-pad.r,h-pad.b); ctx.stroke();
+
+  for (const s of series) {
+    ctx.strokeStyle = s.color; ctx.lineWidth = 2.5; ctx.beginPath();
+    s.data.forEach((p, i) => { const px = xToPx(p.x), py = yToPx(p.y); if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); });
+    ctx.stroke();
+  }
+
+  if (opts.vLines) {
+    opts.vLines.forEach(v => {
+      const px = xToPx(v.x);
+      ctx.strokeStyle = v.color || '#9ca3af'; ctx.setLineDash([6,4]); ctx.beginPath(); ctx.moveTo(px,pad.t); ctx.lineTo(px,h-pad.b); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = v.color || '#6b7280'; ctx.fillText(v.label, px+4, pad.t+12);
+    });
+  }
+}
+
+function update() {
+  const p = Object.fromEntries(ids.map(id => [id, get(id)]));
+  const labels = {
+    alphaVal: fmt(p.alpha), betaSVal: fmt(p.betaS), betaJVal: fmt(p.betaJ), bsVal: fmt(p.bs), bjVal: fmt(p.bj),
+    rsVal: fmt(p.rs)+'x', rjVal: fmt(p.rj)+'x', hjMaxVal: fmt(p.hjMax,1), ujVal: fmt(p.uj)+'x',
+    MsVal: fmtMoney(p.Ms), MjVal: fmtMoney(p.Mj), xsVal: fmt(p.xs)+'x', xjVal: fmt(p.xj)+'x'
+  };
+  Object.entries(labels).forEach(([id, val]) => document.getElementById(id).textContent = val);
+
+  const Ss = p.Ms * p.xs, Sj = p.Mj * p.xj;
+  const cs = seniorCapacity(p.xs, p.bs, p.rs), cj = juniorCapacity(p.xj, p.alpha, p.bj, p.rj);
+  const hs = seniorHours(), hj = juniorHours(p.xj, p.hjMax, p.uj);
+  const Qs = output(cs, hs, p.betaS), Qj = output(cj, hj, p.betaJ);
+  const Ks = costPerOutput(Ss, Qs), Kj = costPerOutput(Sj, Qj);
+
+  document.getElementById('QsOut').textContent = fmt(Qs,2);
+  document.getElementById('QjOut').textContent = fmt(Qj,2);
+  document.getElementById('KsOut').textContent = fmtMoney(Ks);
+  document.getElementById('KjOut').textContent = fmtMoney(Kj);
+
+  document.getElementById('salS').textContent = fmtMoney(Ss);
+  document.getElementById('salJ').textContent = fmtMoney(Sj);
+  document.getElementById('capS').textContent = fmt(cs,2);
+  document.getElementById('capJ').textContent = fmt(cj,2);
+  document.getElementById('hrsS').textContent = fmt(hs,1);
+  document.getElementById('hrsJ').textContent = fmt(hj,1);
+  document.getElementById('tblQs').textContent = fmt(Qs,2);
+  document.getElementById('tblQj').textContent = fmt(Qj,2);
+  document.getElementById('tblKs').textContent = fmtMoney(Ks);
+  document.getElementById('tblKj').textContent = fmtMoney(Kj);
+
+  const summary = [];
+  if (Kj < Ks) summary.push('Junior is cheaper per unit of shipped output under the current assumptions.');
+  else if (Ks < Kj) summary.push('Senior is cheaper per unit of shipped output under the current assumptions.');
+  else summary.push('They are tied on cost per unit of output under the current assumptions.');
+  if (Qj > Qs) summary.push('Junior is faster on daily net output here.');
+  else if (Qs > Qj) summary.push('Senior is faster on daily net output here.');
+  else summary.push('They are tied on daily net output here.');
+  summary.push('The result is mainly being driven by junior full-capacity α, junior bug rate βⱼ, and junior max hours.');
+  document.getElementById('summary').textContent = summary.join(' ');
+
+  const xs = [], capS = [], capJ = [], hrsS = [], hrsJ = [], outS = [], outJ = [], costS = [], costJ = [];
+  for (let x=0.5; x<=3.0001; x+=0.02) {
+    const sc = seniorCapacity(x, p.bs, p.rs);
+    const sh = seniorHours();
+    const sq = output(sc, sh, p.betaS);
+    xs.push(x);
+    capS.push({x, y: sc});
+    hrsS.push({x, y: sh});
+    outS.push({x, y: sq});
+    costS.push({x, y: costPerOutput(p.Ms*x, sq)});
+  }
+  for (let x=0.5; x<=3.0001; x+=0.02) {
+    const jc = juniorCapacity(x, p.alpha, p.bj, p.rj);
+    const jh = juniorHours(x, p.hjMax, p.uj);
+    const jq = output(jc, jh, p.betaJ);
+    capJ.push({x, y: jc});
+    hrsJ.push({x, y: jh});
+    outJ.push({x, y: jq});
+    costJ.push({x, y: costPerOutput(p.Mj*x, jq)});
+  }
+
+  drawChart('capacityChart', [
+    {color:'#2563eb', data:capS},
+    {color:'#059669', data:capJ},
+    {color:'#ea580c', data:hrsS},
+    {color:'#7c3aed', data:hrsJ},
+  ], {xMin:0.5, xMax:3.0, vLines:[{x:p.xs, label:'xₛ', color:'#2563eb'}, {x:p.xj, label:'xⱼ', color:'#059669'}]});
+
+  drawChart('outputChart', [
+    {color:'#2563eb', data:outS},
+    {color:'#059669', data:outJ},
+  ], {xMin:0.5, xMax:3.0, vLines:[{x:p.xs, label:'xₛ', color:'#2563eb'}, {x:p.xj, label:'xⱼ', color:'#059669'}]});
+
+  drawChart('costChart', [
+    {color:'#dc2626', data:costS},
+    {color:'#ea580c', data:costJ},
+  ], {xMin:0.5, xMax:3.0, vLines:[{x:p.xs, label:'xₛ', color:'#dc2626'}, {x:p.xj, label:'xⱼ', color:'#ea580c'}]});
+}
+ids.forEach(id => document.getElementById(id).addEventListener('input', update));
+update();
+</script>
+</body>
+</html>

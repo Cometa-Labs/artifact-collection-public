@@ -58,5 +58,41 @@
     "outputs": ["A reusable pipeline definition (stages + criteria)", "A list of campaigns instantiating it", "Flags for pipeline/campaign coupling found during extraction"],
     "relatedArtifacts": ["vc-operations-5-layer-model"],
     "tags": ["Operations", "Workflow Design", "Process Templates"]
+  },
+  {
+    "slug": "marketplace-competitor-quadrant-mapping",
+    "name": "Marketplace Competitor Quadrant Mapping",
+    "indexCode": "SKILL-006",
+    "category": "Research",
+    "summary": "Map a marketplace/collectibles competitive landscape by scoring competitors on bipolar dimensions, categorizing by business model, and plotting dimension pairs as quadrants to find positioning whitespace.",
+    "whenToUse": "Use when asked to build a competitor map, positioning matrix, or whitespace analysis for a marketplace, RWA/tokenization, or collectibles-style product.",
+    "inputs": ["List of competitors and direct product research on each", "Candidate scoring dimensions relevant to the category"],
+    "outputs": ["Dimension definition table", "Competitor score matrix with evidence notes", "2-3 quadrant plots with one-sentence insights, one flagged primary"],
+    "relatedArtifacts": ["pokemon-tcg-competitor"],
+    "tags": ["Market Research", "Competitor Analysis", "Marketplace", "Positioning"]
+  },
+  {
+    "slug": "marketplace-pain-point-synthesis",
+    "name": "Marketplace Cross-Market Pain-Point Synthesis",
+    "indexCode": "SKILL-007",
+    "category": "Research",
+    "summary": "Synthesize region/segment-specific marketplace research into a small set of universal pain points, each annotated with its region-specific manifestation, to find a hook that works across otherwise different markets.",
+    "whenToUse": "Use when turning scattered regional/segment research into a small number of evidence-backed cross-market themes for a marketplace or collectibles product.",
+    "inputs": ["Region/segment-specific research with sourced claims on motivation, trust, and friction"],
+    "outputs": ["Per-region evidence notes", "3-5 cross-market pain points with per-region manifestations", "Real-fragility vs. surface-friction flags", "One justified universal hook"],
+    "relatedArtifacts": ["pokemon-tcg-competitor"],
+    "tags": ["Market Research", "Synthesis", "Marketplace", "Regional Analysis"]
+  },
+  {
+    "slug": "junior-vs-senior-cost-framework",
+    "name": "Junior-vs-Senior Cost Framework",
+    "indexCode": "SKILL-008",
+    "category": "Research",
+    "summary": "Compare two hiring tiers on cost-per-unit-of-output using four levers (capacity ramp, quality/rework penalty, sustainable hours, salary relative to market) instead of comparing salary directly.",
+    "whenToUse": "Use when asked whether hiring junior or senior engineers (or a similar two-tier staffing decision) is more cost-effective, or why a cheaper hire isn't necessarily cheaper per unit of output.",
+    "inputs": ["Assumptions for each of the four levers per tier", "Confidence/source for each assumption"],
+    "outputs": ["Four-lever assumption table", "Net output and cost-per-output per tier", "Sensitivity statement naming the dominant lever(s)", "Conditional conclusion with flip-condition"],
+    "relatedArtifacts": ["junior-vs-senior-agentic-software-era"],
+    "tags": ["Operations", "Hiring", "Cost Modeling", "Decision Framework"]
   }
 ]

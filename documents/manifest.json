@@ -37,5 +37,31 @@
     "status": "Reference",
     "agentUse": "Use to reason about VC workflow layers (evidence, interpretation, operational facts, pipeline stage records, pipelines), the process/state distinction, pipeline-vs-campaign, and how leads move through venture, liquid token, or incubation pipelines.",
     "tags": ["Venture Capital", "Operations", "Pipeline Design", "Data Model"]
+  },
+  {
+    "slug": "pokemon-tcg-competitor",
+    "title": "Pokemon TCG & Collectibles — Full Research Report",
+    "eyebrow": "Market structure",
+    "summary": "Global Pokemon TCG and collectibles research covering regional market behavior, trust/liquidity/price-discovery pain points, and a 9-dimension competitor map across RWA/crypto, live commerce, traditional marketplace, emerging, and investment-product platforms.",
+    "file": "pokemon-tcg-competitor.html",
+    "date": "2026-07-28",
+    "type": "Report",
+    "indexCode": "MKT-006",
+    "status": "Reference",
+    "agentUse": "Use for Pokemon TCG/collectibles market sizing by region, cross-market pain-point evidence (trust, liquidity, price discovery, cross-border access), and competitor positioning across the 9 scored dimensions and 3 recommended quadrant plots.",
+    "tags": ["Pokemon TCG", "Collectibles", "Competitor Map", "Market Research"]
+  },
+  {
+    "slug": "junior-vs-senior-agentic-software-era",
+    "title": "Junior vs Senior Task Execution Model",
+    "eyebrow": "Operations",
+    "summary": "Interactive cost-per-output calculator comparing junior and senior engineers under adjustable capacity-ramp, bug-rate, hours, and salary-multiple assumptions.",
+    "file": "junior-vs-senior-agentic-software-era.html",
+    "date": "2026-07-28",
+    "type": "Calculator",
+    "indexCode": "OPS-007",
+    "status": "Reference",
+    "agentUse": "Use to reason about when junior vs senior engineers are cheaper per unit of shipped output, and which levers (capacity ramp, bug multiplier, max hours, salary multiple) drive that outcome.",
+    "tags": ["Operations", "Hiring", "Cost Modeling", "Engineering"]
   }
 ]
