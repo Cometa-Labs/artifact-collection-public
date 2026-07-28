@@ -1,0 +1,773 @@
+	
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	  <title>VC Operations — 5-Layer Model and Pipelines</title>
+	  <style>
+	    :root {
+	      --bg: #f6f7fb;
+	      --panel: #ffffff;
+	      --ink: #1f2937;
+	      --muted: #6b7280;
+	      --line: #d1d5db;
+	      --accent: #1d4ed8;
+	      --accent-2: #0f766e;
+	      --l0: #fff7ed;
+	      --l1: #eff6ff;
+	      --l2: #ecfdf5;
+	      --l3: #f5f3ff;
+	      --l4: #eef2ff;
+	      --soft: #f9fafb;
+	      --warn: #fffbeb;
+	    }
+	    * { box-sizing: border-box; }
+	    body {
+	      margin: 0;
+	      background: var(--bg);
+	      color: var(--ink);
+	      font-family: Arial, Helvetica, sans-serif;
+	      line-height: 1.55;
+	    }
+	    .wrap {
+	      max-width: 1120px;
+	      margin: 0 auto;
+	      padding: 32px 20px 72px;
+	    }
+	    h1, h2, h3, h4 {
+	      line-height: 1.2;
+	      margin-top: 0;
+	    }
+	    h1 {
+	      font-size: 2.2rem;
+	      margin-bottom: 8px;
+	    }
+	    h2 {
+	      font-size: 1.45rem;
+	      margin-top: 36px;
+	      margin-bottom: 12px;
+	      border-bottom: 2px solid var(--line);
+	      padding-bottom: 8px;
+	    }
+	    h3 {
+	      font-size: 1.1rem;
+	      margin-top: 24px;
+	      margin-bottom: 8px;
+	    }
+	    h4 {
+	      font-size: 1rem;
+	      margin-top: 18px;
+	      margin-bottom: 6px;
+	    }
+	    p { margin: 10px 0; }
+	    ul { margin-top: 8px; }
+	    li { margin: 6px 0; }
+	    .subtle { color: var(--muted); }
+	    .card {
+	      background: var(--panel);
+	      border: 1px solid var(--line);
+	      border-radius: 14px;
+	      padding: 20px;
+	      margin: 16px 0;
+	    }
+	    .hero {
+	      background: linear-gradient(135deg, #ffffff, #f3f6ff);
+	      border: 1px solid var(--line);
+	      border-radius: 18px;
+	      padding: 26px 22px;
+	      margin-bottom: 20px;
+	    }
+	    .pill {
+	      display: inline-block;
+	      background: #e5e7eb;
+	      color: #111827;
+	      border-radius: 999px;
+	      padding: 5px 10px;
+	      font-size: 0.92rem;
+	      margin-right: 8px;
+	      margin-bottom: 8px;
+	    }
+	    .flow {
+	      white-space: pre-wrap;
+	      font-family: "Courier New", Courier, monospace;
+	      background: #111827;
+	      color: #f9fafb;
+	      padding: 16px;
+	      border-radius: 12px;
+	      overflow-x: auto;
+	      font-size: 0.96rem;
+	    }
+	    .layer {
+	      border: 1px solid var(--line);
+	      border-left: 7px solid var(--accent);
+	      border-radius: 12px;
+	      padding: 16px;
+	      margin: 14px 0;
+	      background: #fff;
+	    }
+	    .l0 { background: var(--l0); }
+	    .l1 { background: var(--l1); }
+	    .l2 { background: var(--l2); }
+	    .l3 { background: var(--l3); }
+	    .l4 { background: var(--l4); }
+	    .grid-2 {
+	      display: grid;
+	      grid-template-columns: 1fr 1fr;
+	      gap: 16px;
+	    }
+	    .grid-3 {
+	      display: grid;
+	      grid-template-columns: 1fr 1fr 1fr;
+	      gap: 16px;
+	    }
+	    .mini {
+	      background: var(--soft);
+	      border: 1px solid var(--line);
+	      border-radius: 12px;
+	      padding: 14px;
+	    }
+	    .note {
+	      background: var(--warn);
+	      border: 1px solid #fcd34d;
+	      border-radius: 12px;
+	      padding: 14px;
+	      margin: 14px 0;
+	    }
+	    .term {
+	      background: #f8fafc;
+	      border: 1px solid var(--line);
+	      border-radius: 10px;
+	      padding: 10px 12px;
+	      margin: 10px 0;
+	    }
+	    .process {
+	      color: #0f766e;
+	      font-weight: bold;
+	    }
+	    .state {
+	      color: #1d4ed8;
+	      font-weight: bold;
+	    }
+	    table {
+	      width: 100%;
+	      border-collapse: collapse;
+	      margin: 12px 0;
+	      background: white;
+	      border: 1px solid var(--line);
+	    }
+	    th, td {
+	      border: 1px solid var(--line);
+	      padding: 10px;
+	      text-align: left;
+	      vertical-align: top;
+	    }
+	    th {
+	      background: #f3f4f6;
+	    }
+	    .center {
+	      text-align: center;
+	    }
+	    .big-seq {
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 10px;
+	      align-items: center;
+	      margin: 16px 0 8px;
+	    }
+	    .node {
+	      background: #dbeafe;
+	      border: 1px solid #93c5fd;
+	      border-radius: 999px;
+	      padding: 10px 14px;
+	      font-weight: bold;
+	    }
+	    .proc {
+	      background: #e0f2fe;
+	      border: 1px solid #7dd3fc;
+	      border-radius: 10px;
+	      padding: 10px 14px;
+	      font-weight: bold;
+	    }
+	    .arrow {
+	      color: var(--muted);
+	      font-weight: bold;
+	    }
+	    .toolbar {
+	      position: sticky;
+	      top: 0;
+	      z-index: 10;
+	      background: rgba(246, 247, 251, 0.92);
+	      backdrop-filter: blur(8px);
+	      padding: 12px 0 10px;
+	      margin-bottom: 12px;
+	    }
+	    .toolbar-inner {
+	      max-width: 1120px;
+	      margin: 0 auto;
+	      padding: 0 20px;
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 10px;
+	    }
+	    button {
+	      border: 1px solid #cbd5e1;
+	      background: white;
+	      color: #111827;
+	      border-radius: 10px;
+	      padding: 10px 14px;
+	      font-size: 0.95rem;
+	      cursor: pointer;
+	    }
+	    button:hover {
+	      background: #f8fafc;
+	    }
+	    .primary {
+	      background: #1d4ed8;
+	      color: white;
+	      border-color: #1d4ed8;
+	    }
+	    .primary:hover {
+	      background: #1e40af;
+	    }
+	    .footer-actions {
+	      margin-top: 36px;
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 12px;
+	    }
+	    #plainTextSource {
+	      display: none;
+	    }
+	    @media (max-width: 860px) {
+	      .grid-2, .grid-3 {
+	        grid-template-columns: 1fr;
+	      }
+	    }
+	    @media print {
+	      .toolbar,
+	      .footer-actions {
+	        display: none !important;
+	      }
+	      body {
+	        background: white;
+	      }
+	      .wrap {
+	        max-width: none;
+	        padding: 0;
+	      }
+	      .card,
+	      .hero,
+	      .layer,
+	      .mini,
+	      .note,
+	      .term {
+	        break-inside: avoid;
+	        box-shadow: none;
+	      }
+	    }
+	  </style>
+	</head>
+	<body>
+	  <div class="toolbar">
+	    <div class="toolbar-inner">
+	      <button class="primary" onclick="window.print()">Save as PDF</button>
+	      <button onclick="downloadHTML()">Download HTML</button>
+	      <button onclick="copyPlainText()">Copy Plain Text</button>
+	    </div>
+	  </div>
+	  <div class="wrap" id="documentRoot">
+	    <div class="hero">
+	      <h1>VC Operations — The 5-Layer Model</h1>
+	      <p class="subtle">
+	        A practical model for understanding how a venture firm moves from raw evidence to investment pipelines, while preserving traceability and keeping business decisions human-controlled.
+	      </p>
+	      <div>
+	        <span class="pill">Evidence-first</span>
+	        <span class="pill">Business logic begins at Layer 3</span>
+	        <span class="pill">Pipelines are executive-facing</span>
+	        <span class="pill">Campaigns implement pipelines</span>
+	      </div>
+	    </div>
+	    <div class="card">
+	      <h2>1. Executive Summary</h2>
+	      <p>
+	        This model describes how a VC firm operates across five connected layers of records.
+	      </p>
+	      <p>
+	        At the bottom are <strong>immutable evidence records</strong>. These support notes, interpretations, and structured operational facts. Once those facts are used to evaluate investable things inside a business process, the system enters <strong>business logic</strong>.
+	      </p>
+	      <p>
+	        The highest-level business logic is expressed as <strong>pipelines</strong>. Pipelines are what operators and executives use to talk about how leads become investments and how investments are later monitored for returns.
+	      </p>
+	    </div>
+	    <div class="card">
+	      <h2>2. The Core Distinction: Processes vs States</h2>
+	      <p>
+	        In the abstract pipeline, the <strong>-ing</strong> words are <strong>processes</strong>, and the nouns are <strong>states or concepts</strong>.
+	      </p>
+	      <div class="big-seq">
+	        <div class="node">Leads</div>
+	        <div class="arrow">→</div>
+	        <div class="proc">Networking</div>
+	        <div class="arrow">→</div>
+	        <div class="node">Opportunity</div>
+	        <div class="arrow">→</div>
+	        <div class="proc">Qualifying</div>
+	        <div class="arrow">→</div>
+	        <div class="node">Candidate</div>
+	        <div class="arrow">→</div>
+	        <div class="proc">Committing</div>
+	        <div class="arrow">→</div>
+	        <div class="node">Investment</div>
+	        <div class="arrow">→</div>
+	        <div class="proc">Monitoring &amp; Reporting</div>
+	        <div class="arrow">→</div>
+	        <div class="node">ROI</div>
+	      </div>
+	      <div class="grid-2">
+	        <div class="mini">
+	          <h3>Processes</h3>
+	          <p><span class="process">Networking</span>, <span class="process">Qualifying/Qualification</span>, <span class="process">Committing/Commitment</span>, and <span class="process">Monitoring &amp; Reporting</span> are activities.</p>
+	          <p>They are things the firm does.</p>
+	        </div>
+	        <div class="mini">
+	          <h3>States / Concepts</h3>
+	          <p><span class="state">Leads</span>, <span class="state">Opportunity</span>, <span class="state">Candidate</span>, <span class="state">Investment</span>, and <span class="state">ROI/Returns</span> are states or business concepts.</p>
+	          <p>They describe what stage something is in.</p>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="card">
+	      <h2>3. Abstract Pipeline</h2>
+	      <p>
+	        The abstract pipeline is the master lifecycle used by the firm to reason about investable things from first contact to returns.
+	      </p>
+	      <p>
+	        It is intentionally generic. Different asset classes or investment approaches can specialize it in different ways, but they all roughly follow the same shape shown above.
+	      </p>
+	      <h3>Stage meanings</h3>
+	      <div class="term"><strong>Lead</strong> = something on the firm’s radar before it has been promoted into a more serious business state.</div>
+	      <div class="term"><strong>Networking</strong> = the ongoing relationship-building, information-gathering, trust-building, and context-building process around leads.</div>
+	      <div class="term"><strong>Opportunity</strong> = a lead that became interesting because a meaningful signal was spotted.</div>
+	      <div class="term"><strong>Qualification</strong> = the process of checking whether the opportunity meets the criteria to move forward.</div>
+	      <div class="term"><strong>Candidate</strong> = something that passed qualification and is now serious enough that the firm is trying to make the deal work.</div>
+	      <div class="term"><strong>Commitment</strong> = the process of firming up the investment, often relying on both internal and external signals.</div>
+	      <div class="term"><strong>Investment</strong> = the successful target state reached when a lead makes it all the way through.</div>
+	      <div class="term"><strong>Monitoring &amp; Reporting</strong> = the ongoing process of tracking what happened after investment.</div>
+	      <div class="term"><strong>ROI</strong> = the realized or measured return to the firm and its stakeholders.</div>
+	      <div class="note">
+	        A lead does not need a special rejected state in the base model. It can simply stop being promoted. Additional states like watchlist, revisit later, or follow up in 6 months are meaningful extensions, but they are not required to define the core abstract pipeline.
+	      </div>
+	    </div>
+	    <div class="card">
+	      <h2>4. Pipeline vs Campaign</h2>
+	      <div class="grid-2">
+	        <div class="mini">
+	          <h3>Pipeline</h3>
+	          <p>
+	            A pipeline is a reusable business process definition. It describes how a class of investments should move through the abstract pipeline.
+	          </p>
+	          <p>
+	            Example: the venture-backed company pipeline.
+	          </p>
+	        </div>
+	        <div class="mini">
+	          <h3>Campaign</h3>
+	          <p>
+	            A campaign is an implemented pipeline. It is a real operational instance of a pipeline, often tied to a specific cohort, theme, event, thesis, or sourcing effort.
+	          </p>
+	          <p>
+	            Example: a pitch competition cohort where 20 companies are evaluated using the venture-backed company pipeline.
+	          </p>
+	        </div>
+	      </div>
+	      <div class="flow">Pipeline = reusable business process definition
+	Campaign = implemented instance of that pipeline</div>
+	    </div>
+	    <div class="card">
+	      <h2>5. Shared Lead Universe</h2>
+	      <p>
+	        Leads are shared across the firm. They are not owned by just one pipeline.
+	      </p>
+	      <p>
+	        A pipeline can intake many kinds of investable things. Sometimes the input is a single thing. Sometimes the input is a combination.
+	      </p>
+	      <h3>Single-input examples</h3>
+	      <ul>
+	        <li>a company</li>
+	        <li>a token</li>
+	        <li>a project</li>
+	        <li>a product</li>
+	        <li>a person</li>
+	      </ul>
+	      <h3>Combination-input examples</h3>
+	      <ul>
+	        <li>founder + project</li>
+	        <li>team + company</li>
+	        <li>token + ecosystem thesis</li>
+	        <li>person + product idea</li>
+	      </ul>
+	      <p>
+	        This nuance matters most in pipelines like incubation. Incubation may evaluate:
+	      </p>
+	      <ul>
+	        <li>a project looking for founders</li>
+	        <li>founders looking for projects</li>
+	        <li>premade founder-project matches</li>
+	      </ul>
+	      <p>
+	        So when this document talks about a lead moving through a pipeline, the lead should be understood as an <strong>investable subject</strong>. That investable subject may be:
+	      </p>
+	      <ul>
+	        <li>a single entity, or</li>
+	        <li>a structured combination of entities</li>
+	      </ul>
+	      <div class="note">
+	        One <strong>investable subject</strong> can appear in more than one pipeline or campaign at the same time. That is valid.
+	      </div>
+	    </div>
+	    <h2>6. The 5 Layers</h2>
+	    <div class="layer l0">
+	      <h3>Layer 0 — Evidence</h3>
+	      <p><strong>What it is:</strong> immutable source material.</p>
+	      <p><strong>Why it matters:</strong> this is the raw basis for all interpretation and later decision-making.</p>
+	      <ul>
+	        <li>meeting recordings</li>
+	        <li>emails</li>
+	        <li>messages</li>
+	        <li>documents</li>
+	        <li>audio / video</li>
+	        <li>images</li>
+	        <li>archived web pages</li>
+	        <li>social posts, comments, chat logs</li>
+	      </ul>
+	      <p><strong>Important:</strong> interactions are a major subset of evidence, but not all evidence is interaction-based.</p>
+	    </div>
+	    <div class="layer l1">
+	      <h3>Layer 1 — Extractions &amp; Interpretations</h3>
+	      <p><strong>What it is:</strong> authored notes or generated outputs derived from evidence.</p>
+	      <ul>
+	        <li>meeting notes</li>
+	        <li>research notes</li>
+	        <li>summaries</li>
+	        <li>transcriptions</li>
+	        <li>OCR</li>
+	        <li>observations</li>
+	        <li>insights</li>
+	      </ul>
+	      <p>
+	        This layer is observer-dependent. Different people or models may produce different interpretations from the same evidence.
+	      </p>
+	    </div>
+	    <div class="layer l2">
+	      <h3>Layer 2 — Operational Facts &amp; Canonical Statements</h3>
+	      <p><strong>What it is:</strong> structured, machine-readable statements built from Layer 1 material.</p>
+	      <ul>
+	        <li>normalized facts</li>
+	        <li>current believed conclusions</li>
+	        <li>business insights</li>
+	        <li>tentative or disputed statements</li>
+	        <li>approved or signed-off statements</li>
+	      </ul>
+	      <p>
+	        This is the final upstream layer before business logic begins.
+	      </p>
+	    </div>
+	    <div class="layer l3">
+	      <h3>Layer 3 — Pipeline Stage Records</h3>
+	      <p><strong>What it is:</strong> a record of an investable subject being evaluated at one process stage.</p>
+	      <p><strong>This is where business logic begins.</strong></p>
+	      <ul>
+	        <li>checklist-driven</li>
+	        <li>human-triggered</li>
+	        <li>can prefill from Layer 2</li>
+	        <li>supports proceed / no proceed decisions</li>
+	        <li>often one table per stage or process node</li>
+	      </ul>
+	      <p><strong>Reevaluation model:</strong> freeze old row, generate a new row, and visually flag potential staleness when new data arrives.</p>
+	    </div>
+	    <div class="layer l4">
+	      <h3>Layer 4 — Pipelines</h3>
+	      <p><strong>What it is:</strong> the highest-level business logic used to organize and communicate how the firm invests.</p>
+	      <ul>
+	        <li>executive-facing</li>
+	        <li>human-defined</li>
+	        <li>composed of stage records</li>
+	        <li>implemented as campaigns</li>
+	      </ul>
+	      <p>
+	        This is where the business talks in terms like deal flow, token investing, incubation flow, and so on.
+	      </p>
+	    </div>
+	    <div class="card">
+	      <h2>7. The Three Identified Pipelines</h2>
+	      <div class="grid-3">
+	        <div class="mini">
+	          <h3>1. Venture-Backed Company Pipeline</h3>
+	          <p>
+	            Used for traditional venture investing into companies.
+	          </p>
+	          <p><strong>Investment state:</strong> a venture-backed company.</p>
+	          <p><strong>Typical specialization:</strong> founder diligence, company diligence, product/GTM diligence, technical diligence, capital commitment.</p>
+	        </div>
+	        <div class="mini">
+	          <h3>2. Liquid Token Pipeline</h3>
+	          <p>
+	            Used for direct token investing and speculation.
+	          </p>
+	          <p><strong>Investment state:</strong> an invested token position.</p>
+	          <p><strong>Typical specialization:</strong> fundamental analysis, technical analysis, allocation decision, trade execution, price watch.</p>
+	        </div>
+	        <div class="mini">
+	          <h3>3. Incubation Pipeline</h3>
+	          <p>
+	            Used for shaping projects, matching founders, and maturing opportunities into venture-backable companies.
+	          </p>
+	          <p><strong>Investment state:</strong> often realized later by promotion into the venture-backed company pipeline once there is traction.</p>
+	          <p><strong>Typical specialization:</strong> thesis, gaps, product idea, founder matching, POC, MVP, traction.</p>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="card">
+	      <h2>8. Cross-Pipeline Rules</h2>
+	      <ul>
+	        <li>A lead can enter zero, one, or multiple pipelines.</li>
+	        <li>The same investable subject can reappear later, such as a company in a later round or a token under renewed analysis.</li>
+	        <li>A pipeline may accept a single entity or a combination of entities, depending on its rules.</li>
+	        <li>Monitoring &amp; Reporting is a universal abstract stage, even if some concrete pipelines skip or simplify it.</li>
+	        <li>Commitment can depend on external signals as well as internal judgment.</li>
+	      </ul>
+	    </div>
+	    <div class="card">
+	      <h2>9. Worked Examples</h2>
+	      <h3>Example A — Pitch Competition Cohort</h3>
+	      <p>
+	        A VC runs a pitch competition for 20 startups.
+	      </p>
+	      <ul>
+	        <li><strong>Pipeline used:</strong> Venture-Backed Company Pipeline</li>
+	        <li><strong>Campaign:</strong> Spring 2026 Pitch Competition Cohort</li>
+	        <li><strong>Shared lead universe:</strong> the 20 companies first appear as leads</li>
+	        <li><strong>Opportunity:</strong> some stand out based on signals</li>
+	        <li><strong>Qualification:</strong> the firm evaluates team, market, product, and technical fit</li>
+	        <li><strong>Candidate:</strong> the strongest ones become serious candidates</li>
+	        <li><strong>Commitment:</strong> negotiation, diligence completion, internal approval, external alignment</li>
+	        <li><strong>Investment:</strong> selected companies become venture-backed investments</li>
+	      </ul>
+	      <h3>Example B — Token on the Radar</h3>
+	      <p>
+	        A token appears on the firm's radar due to a market narrative and on-chain activity.
+	      </p>
+	      <ul>
+	        <li><strong>Lead:</strong> the token is noticed</li>
+	        <li><strong>Networking equivalent:</strong> market watching, research, conversations, ecosystem signals</li>
+	        <li><strong>Opportunity:</strong> enough signal appears to justify analysis</li>
+	        <li><strong>Qualification:</strong> fundamental and technical review</li>
+	        <li><strong>Candidate:</strong> a serious trade or allocation case exists</li>
+	        <li><strong>Commitment:</strong> the firm finalizes position sizing and entry</li>
+	        <li><strong>Investment:</strong> the token position is taken</li>
+	        <li><strong>Monitoring:</strong> price watch and position review</li>
+	      </ul>
+	      <h3>Example C — Incubation to Venture Pipeline</h3>
+	      <p>
+	        A thesis area is identified and one of several possible investable subjects becomes promising.
+	      </p>
+	      <ul>
+	        <li><strong>Possible lead forms:</strong> project, founder, product idea, or founder + project match</li>
+	        <li><strong>Opportunity:</strong> the fit looks promising</li>
+	        <li><strong>Qualification:</strong> founder-project fit and feasibility are assessed</li>
+	        <li><strong>Candidate:</strong> the subject is strong enough to move into serious build mode</li>
+	        <li><strong>Commitment:</strong> founder alignment, MVP push, and early support</li>
+	        <li><strong>Result:</strong> once the MVP is out and there is traction, it can be promoted into the Venture-Backed Company Pipeline</li>
+	      </ul>
+	    </div>
+	    <div class="card">
+	      <h2>10. The Mental Model in One View</h2>
+	      <div class="flow">Shared lead universe
+	    ↓
+	Networking and evidence collection
+	    ↓
+	Layer 0: Evidence
+	    ↓
+	Layer 1: Extractions & Interpretations
+	    ↓
+	Layer 2: Operational Facts & Canonical Statements
+	    ↓
+	Layer 3: Stage records for concrete business decisions
+	    ↓
+	Layer 4: Pipelines
+	    ↓
+	Campaigns implement pipelines in the real world
+	    ↓
+	Investments are monitored for ROI</div>
+	    </div>
+	    <div class="card">
+	      <h2>11. Entity Model</h2>
+	      <p>
+	        The system needs a vocabulary for what kinds of things can exist in the shared lead universe and what kinds of things can be evaluated inside pipelines.
+	      </p>
+	      <p>
+	        The simplest useful distinction is between <strong>single entities</strong> and <strong>combination subjects</strong>.
+	      </p>
+	      <div class="grid-2">
+	        <div class="mini">
+	          <h3>Single entities</h3>
+	          <ul>
+	            <li><strong>Person</strong> — an individual human</li>
+	            <li><strong>Company</strong> — a legal or operating business entity</li>
+	            <li><strong>Organization</strong> — a broader coordinated group, which may or may not be a company</li>
+	            <li><strong>Project</strong> — an initiative, venture concept, or developing effort that may not yet be a company</li>
+	            <li><strong>Product</strong> — a specific product, offering, or build effort</li>
+	            <li><strong>Token</strong> — a crypto asset or tokenized instrument</li>
+	          </ul>
+	        </div>
+	        <div class="mini">
+	          <h3>Combination subjects</h3>
+	          <ul>
+	            <li><strong>Founder + Project</strong></li>
+	            <li><strong>Team + Company</strong></li>
+	            <li><strong>Person + Product idea</strong></li>
+	            <li><strong>Token + ecosystem thesis</strong></li>
+	          </ul>
+	          <p>
+	            These are not just notes. They can be valid pipeline inputs in their own right.
+	          </p>
+	        </div>
+	      </div>
+	      <h3>Why this matters</h3>
+	      <p>
+	        A pipeline should not be forced to assume its input is always a company. Some pipelines will evaluate companies directly. Others, especially incubation, may evaluate combinations like founder + project fit.
+	      </p>
+	      <table>
+	        <thead>
+	          <tr>
+	            <th>Term</th>
+	            <th>Working meaning</th>
+	            <th>Why it matters operationally</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          <tr>
+	            <td><strong>Person</strong></td>
+	            <td>An individual human actor</td>
+	            <td>Can be part of sourcing, diligence, founder matching, or leadership evaluation</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Company</strong></td>
+	            <td>A business entity that can receive investment or operate commercially</td>
+	            <td>Common input to venture pipelines</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Organization</strong></td>
+	            <td>A broader group that may not map cleanly to one company</td>
+	            <td>Useful when the real-world subject is coordinated but not yet packaged as a single company</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Project</strong></td>
+	            <td>An emerging initiative that may later become a company</td>
+	            <td>Especially important in incubation</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Product</strong></td>
+	            <td>A specific product or offering, whether or not the company structure is settled</td>
+	            <td>Can matter for early evaluation and build-stage logic</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Token</strong></td>
+	            <td>A crypto asset or tokenized investment subject</td>
+	            <td>Direct input to liquid token pipelines</td>
+	          </tr>
+	          <tr>
+	            <td><strong>Combination subject</strong></td>
+	            <td>A structured pairing or grouping of entities evaluated together</td>
+	            <td>Lets the system represent cases like founder + project fit instead of flattening them too early</td>
+	          </tr>
+	        </tbody>
+	      </table>
+	      <div class="note">
+	        The most important idea is not the label itself. The important idea is that the pipeline input can be either a single entity or a structured combination.
+	      </div>
+	    </div>
+	    <div class="footer-actions">
+	      <button class="primary" onclick="window.print()">Save as PDF</button>
+	      <button onclick="downloadHTML()">Download HTML</button>
+	      <button onclick="copyPlainText()">Copy Plain Text</button>
+	    </div>
+	    <div id="plainTextSource">
+	VC Operations — The 5-Layer Model
+	1. Executive Summary
+	This model describes how a VC firm operates across five connected layers of records.
+	At the bottom are immutable evidence records. These support notes, interpretations, and structured operational facts.
+	Once those facts are used to evaluate investable things inside a business process, the system enters business logic.
+	The highest-level business logic is expressed as pipelines.
+	2. The Core Distinction: Processes vs States
+	Processes: Networking, Qualification, Commitment, Monitoring & Reporting.
+	States / Concepts: Leads, Opportunity, Candidate, Investment, ROI.
+	3. Abstract Pipeline
+	Lead = something on the firm’s radar before it has been promoted into a more serious business state.
+	Networking = the ongoing relationship-building, information-gathering, trust-building, and context-building process around leads.
+	Opportunity = a lead that became interesting because a meaningful signal was spotted.
+	Qualification = the process of checking whether the opportunity meets the criteria to move forward.
+	Candidate = something that passed qualification and is now serious enough that the firm is trying to make the deal work.
+	Commitment = the process of firming up the investment, often relying on both internal and external signals.
+	Investment = the successful target state reached when a lead makes it all the way through.
+	Monitoring & Reporting = the ongoing process of tracking what happened after investment.
+	ROI = the realized or measured return.
+	4. Pipeline vs Campaign
+	Pipeline = reusable business process definition.
+	Campaign = implemented instance of that pipeline.
+	5. Shared Lead Universe
+	A pipeline can intake a single entity or a combination of entities.
+	Single-input examples: company, token, project, product, person.
+	Combination-input examples: founder + project, team + company, token + ecosystem thesis, person + product idea.
+	One investable subject can appear in more than one pipeline or campaign at the same time.
+	6. The 5 Layers
+	Layer 0 — Evidence
+	Layer 1 — Extractions & Interpretations
+	Layer 2 — Operational Facts & Canonical Statements
+	Layer 3 — Pipeline Stage Records
+	Layer 4 — Pipelines
+	7. The Three Identified Pipelines
+	Venture-Backed Company Pipeline
+	Liquid Token Pipeline
+	Incubation Pipeline
+	8. Cross-Pipeline Rules
+	A lead can enter zero, one, or multiple pipelines.
+	A pipeline may accept a single entity or a combination of entities.
+	9. Worked Examples
+	Pitch Competition Cohort
+	Token on the Radar
+	Incubation to Venture Pipeline
+	10. The Mental Model in One View
+	Shared lead universe → Networking and evidence collection → Layer 0 → Layer 1 → Layer 2 → Layer 3 → Layer 4 → Campaigns → ROI
+	11. Entity Model
+	Single entities: Person, Company, Organization, Project, Product, Token.
+	Combination subjects: Founder + Project, Team + Company, Person + Product idea, Token + ecosystem thesis.
+	    </div>
+	  </div>
+	  <script>
+	    function downloadHTML() {
+	      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+	      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+	      const url = URL.createObjectURL(blob);
+	      const a = document.createElement('a');
+	      a.href = url;
+	      a.download = 'vc-operations-5-layer-model.html';
+	      document.body.appendChild(a);
+	      a.click();
+	      a.remove();
+	      URL.revokeObjectURL(url);
+	    }
+	    async function copyPlainText() {
+	      const text = document.getElementById('plainTextSource').innerText.trim();
+	      try {
+	        await navigator.clipboard.writeText(text);
+	        alert('Plain text copied.');
+	      } catch (err) {
+	        alert('Clipboard copy failed on this browser.');
+	      }
+	    }
+	  </script>
+	</body>
+	</html>

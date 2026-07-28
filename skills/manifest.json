@@ -22,5 +22,41 @@
     "outputs": ["One-line mechanism description", "Answers to the four checks (trust/custody, valuation-vs-mechanism, adversarial/scale test, indexer fragility)", "Verdict: Real / Hype / Mixed, with what's-real and what's-hype lines"],
     "relatedArtifacts": ["btcfi-history-hype-vs-real"],
     "tags": ["Bitcoin", "BTCFi", "Market Analysis", "Due Diligence"]
+  },
+  {
+    "slug": "evidence-to-pipeline-layering",
+    "name": "Evidence-to-Pipeline Layering",
+    "indexCode": "SKILL-003",
+    "category": "Operations",
+    "summary": "Structure an organization's data model into 5 traceable layers (evidence, extractions, operational facts, stage records, pipelines) so decisions stay human-controlled and traceable back to source evidence.",
+    "whenToUse": "Use when designing a data model or system architecture for any evaluation/decision workflow (deal flow, hiring, sales, research triage, grant review) that needs to go from unstructured source material to structured, auditable decisions.",
+    "inputs": ["Existing data/artifacts the org already collects (recordings, notes, records)", "The subject(s) being evaluated (single entity or combination)", "Where business decisions currently get made"],
+    "outputs": ["A layer table mapping domain artifacts to the 5 layers", "The business-logic boundary location", "Reevaluation model for stage records (freeze + new row + staleness flag)"],
+    "relatedArtifacts": ["vc-operations-5-layer-model"],
+    "tags": ["Operations", "Data Modeling", "System Design", "Workflow"]
+  },
+  {
+    "slug": "process-vs-state-modeling",
+    "name": "Process-vs-State Modeling",
+    "indexCode": "SKILL-004",
+    "category": "Operations",
+    "summary": "Design or clean up a pipeline/workflow model by strictly separating processes (activities) from states (stages a subject is in).",
+    "whenToUse": "Use whenever a workflow, pipeline, or stage-based system's terminology is ambiguous or mixes activity and status into the same field.",
+    "inputs": ["List of terms currently used to describe workflow stages", "One real subject to trace through the pipeline as a worked example"],
+    "outputs": ["Process vs. state classification table", "Pipeline drawn as an alternating state → process → state sequence", "Worked example narration"],
+    "relatedArtifacts": ["vc-operations-5-layer-model"],
+    "tags": ["Operations", "Workflow Design", "Data Modeling"]
+  },
+  {
+    "slug": "pipeline-vs-campaign-pattern",
+    "name": "Pipeline-vs-Campaign Pattern",
+    "indexCode": "SKILL-005",
+    "category": "Operations",
+    "summary": "Split a reusable process definition (pipeline) from its implemented real-world runs (campaigns) so a shared template can be instantiated repeatedly against different cohorts or initiatives.",
+    "whenToUse": "Use when a team keeps redefining 'how we do X' from scratch for every new batch/cohort/initiative instead of running a shared template.",
+    "inputs": ["The process/workflow currently being redefined per batch or cohort", "At least one other real or plausible use of the same process"],
+    "outputs": ["A reusable pipeline definition (stages + criteria)", "A list of campaigns instantiating it", "Flags for pipeline/campaign coupling found during extraction"],
+    "relatedArtifacts": ["vc-operations-5-layer-model"],
+    "tags": ["Operations", "Workflow Design", "Process Templates"]
   }
 ]

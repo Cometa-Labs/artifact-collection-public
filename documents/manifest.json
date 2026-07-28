@@ -24,5 +24,18 @@
     "status": "Reference",
     "agentUse": "Use to distinguish durable BTCFi primitives from narrative-driven market cycles.",
     "tags": ["BTCFi", "History", "Crypto"]
+  },
+  {
+    "slug": "vc-operations-5-layer-model",
+    "title": "VC Operations — The 5-Layer Model",
+    "eyebrow": "Operations",
+    "summary": "A practical model for how a VC firm moves from immutable evidence records through interpretations and operational facts into pipeline-driven business logic, while keeping investment decisions human-controlled.",
+    "file": "5layersVC.html",
+    "date": "2026-07-28",
+    "type": "Model",
+    "indexCode": "OPS-005",
+    "status": "Reference",
+    "agentUse": "Use to reason about VC workflow layers (evidence, interpretation, operational facts, pipeline stage records, pipelines), the process/state distinction, pipeline-vs-campaign, and how leads move through venture, liquid token, or incubation pipelines.",
+    "tags": ["Venture Capital", "Operations", "Pipeline Design", "Data Model"]
   }
 ]
