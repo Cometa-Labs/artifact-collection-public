@@ -89,5 +89,18 @@
     "status": "Reference",
     "agentUse": "Use for AI router/gateway/agent-platform competitive positioning, fee-structure comparison (token-margin vs platform-fee plays), feature-importance benchmarking by platform category, and steal-worthy-feature/anti-pattern reference.",
     "tags": ["AI Platforms", "LLM Routing", "Competitor Map", "Market Research"]
+  },
+  {
+    "slug": "defi-solana-cardano-protocol-analysis",
+    "title": "DeFi Protocol Analysis — Solana & Cardano",
+    "eyebrow": "Product Research",
+    "summary": "Deep-dive on the top 10 DeFi protocols each on Solana ($5.49B TVL) and Cardano ($132M TVL), 18 user pain points pulled from forums/docs, and 12 AI agent workflows ranked by user value and build feasibility.",
+    "file": "DeFi_Solana_Cardano_Report.html",
+    "date": "2026-07-28",
+    "type": "Report",
+    "indexCode": "DEFI-010",
+    "status": "Reference",
+    "agentUse": "Use for Solana vs Cardano DeFi protocol comparison (lending, liquid staking, DEXs, perps, stablecoins), sourced user pain points, and prioritized AI agent workflow ideas (sophistication layer for Solana, activation layer for Cardano).",
+    "tags": ["DeFi", "Solana", "Cardano", "Competitor Map", "AI Agents"]
   }
 ]
