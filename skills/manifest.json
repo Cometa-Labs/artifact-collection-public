@@ -94,5 +94,17 @@
     "outputs": ["Four-lever assumption table", "Net output and cost-per-output per tier", "Sensitivity statement naming the dominant lever(s)", "Conditional conclusion with flip-condition"],
     "relatedArtifacts": ["junior-vs-senior-agentic-software-era"],
     "tags": ["Operations", "Hiring", "Cost Modeling", "Decision Framework"]
+  },
+  {
+    "slug": "ai-platform-competitor-dimension-scoring",
+    "name": "AI Platform Competitor Dimension Scoring",
+    "indexCode": "SKILL-009",
+    "category": "Market",
+    "summary": "Map the competitive landscape of AI/LLM infrastructure platforms by scoring each on bipolar dimensions with stated rationale, grouping by platform category (router/infra/chat/workflow), and reading the matrix for structural positioning gaps.",
+    "whenToUse": "Use when asked to build a competitor map or positioning analysis for AI model routers, LLM gateways, inference platforms, multi-model chat apps, or agent/workflow platforms.",
+    "inputs": ["List of AI platforms and direct product research on each (pricing, docs, UI)", "Candidate scoring dimensions relevant to AI infra"],
+    "outputs": ["Platform category assignment", "Dimension table with why-it-matters column", "Score matrix with source notes (direct vs. self-reported)", "Feature-importance-by-category table if applicable", "One stated structural positioning gap"],
+    "relatedArtifacts": ["multi-model-ai-platforms"],
+    "tags": ["Market Research", "Competitor Analysis", "AI Platforms", "Positioning"]
   }
 ]

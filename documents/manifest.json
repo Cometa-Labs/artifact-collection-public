@@ -76,5 +76,18 @@
     "status": "Active",
     "agentUse": "Use to reason about the Neo-Fund platform's actor model (LP/GP/Platform), smart contract capital-flow architecture (Factory, Escrow, Fund Contract, Config, Splitter, Registry), and phased roadmap from MVP through fiat ramp and active trading.",
     "tags": ["Fund Infrastructure", "Cardano", "Smart Contracts", "Product Architecture"]
+  },
+  {
+    "slug": "multi-model-ai-platforms",
+    "title": "Multi-Model AI Platforms — Research Report",
+    "eyebrow": "Product Research",
+    "summary": "25 AI router/aggregator, infra, multi-model chat, and workflow/agent platforms mapped against 8 competitive dimensions, fee/margin structure, steal-worthy features, anti-patterns, and a feature-importance matrix by category.",
+    "file": "muti-model-ai.html",
+    "date": "2026-07-28",
+    "type": "Report",
+    "indexCode": "AI-009",
+    "status": "Reference",
+    "agentUse": "Use for AI router/gateway/agent-platform competitive positioning, fee-structure comparison (token-margin vs platform-fee plays), feature-importance benchmarking by platform category, and steal-worthy-feature/anti-pattern reference.",
+    "tags": ["AI Platforms", "LLM Routing", "Competitor Map", "Market Research"]
   }
 ]
