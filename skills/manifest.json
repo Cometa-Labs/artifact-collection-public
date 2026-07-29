@@ -106,5 +106,41 @@
     "outputs": ["Platform category assignment", "Dimension table with why-it-matters column", "Score matrix with source notes (direct vs. self-reported)", "Feature-importance-by-category table if applicable", "One stated structural positioning gap"],
     "relatedArtifacts": ["multi-model-ai-platforms"],
     "tags": ["Market Research", "Competitor Analysis", "AI Platforms", "Positioning"]
+  },
+  {
+    "slug": "defi-pain-point-workflow-prioritization",
+    "name": "DeFi Pain-Point Workflow Prioritization",
+    "indexCode": "SKILL-010",
+    "category": "Product",
+    "summary": "Turn sourced user pain points for a crypto/DeFi ecosystem into a ranked list of candidate AI agent/feature workflows, scored on user value (severity x frequency of pain addressed) vs build feasibility (data availability, complexity, custody/regulatory risk).",
+    "whenToUse": "Use when scoping what to build for a DeFi protocol ecosystem and you need to go from sourced user complaints to a prioritized, tiered build list rather than an unranked feature wishlist.",
+    "inputs": ["Pain points sourced from protocol docs, ecosystem reports, founder statements, and forum/community posts", "Candidate workflow ideas addressing one or more pain points"],
+    "outputs": ["Pain point list with severity and frequency scoring", "Workflow candidates scored on user value vs build feasibility", "Tiered build list (build-first / medium priority / lower feasibility)"],
+    "relatedArtifacts": ["defi-solana-cardano-protocol-analysis"],
+    "tags": ["DeFi", "Product Strategy", "Prioritization", "AI Agents"]
+  },
+  {
+    "slug": "defi-yield-decomposition",
+    "name": "DeFi Yield Decomposition",
+    "indexCode": "SKILL-011",
+    "category": "Research",
+    "summary": "Decompose a headline DeFi yield into its organic component (fees, MEV, staking rewards) vs token-emission/incentive component, and state the post-emission yield to flag yields that will drop when an incentive program tapers.",
+    "whenToUse": "Use when evaluating whether a quoted APY/APR on a staking, lending, or LP product is durable or propped up by a temporary token-incentive program.",
+    "inputs": ["Headline yield figure for a DeFi position or protocol", "Breakdown (or ability to estimate) of fee, MEV, staking, and emission components", "Emission schedule/taper timeline if known"],
+    "outputs": ["Organic vs emission-based yield split", "Post-emission yield estimate", "Emission-schedule risk flag", "Like-for-like ranking against comparable products"],
+    "relatedArtifacts": ["defi-solana-cardano-protocol-analysis"],
+    "tags": ["DeFi", "Yield Analysis", "Due Diligence", "Crypto"]
+  },
+  {
+    "slug": "chain-architecture-defi-feasibility-check",
+    "name": "Chain-Architecture DeFi Feasibility Check",
+    "indexCode": "SKILL-012",
+    "category": "Product",
+    "summary": "Check a proposed DeFi strategy or agent workflow against a target chain's core architecture (account-based vs UTXO/eUTxO, composability, concurrency handling) to catch ideas that are infeasible by design rather than by missing tooling.",
+    "whenToUse": "Use when scoping DeFi or agent workflows for a specific chain, especially when porting an idea that worked on a different chain's architecture.",
+    "inputs": ["Target chain's execution model (account-based vs UTXO/eUTxO, composability support, concurrency model)", "Proposed DeFi strategy or workflow to evaluate"],
+    "outputs": ["Feasibility verdict per proposed strategy", "Structurally different approach when architecturally blocked", "Risk-profile notes for architecturally-supported strategies"],
+    "relatedArtifacts": ["defi-solana-cardano-protocol-analysis"],
+    "tags": ["DeFi", "Blockchain Architecture", "Feasibility", "Product Strategy"]
   }
 ]
