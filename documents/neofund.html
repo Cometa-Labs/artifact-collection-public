@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neo-Fund Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:      #F5F4F0;
+  --white:   #FFFFFF;
+  --ink:     #111318;
+  --muted:   #5C6370;
+  --dim:     #9AA0AC;
+  --rule:    #E0DDD6;
+  --rule2:   #C8C4BC;
+
+  --lp:      #6D3FE0;
+  --lp-bg:   #F0EBFF;
+  --lp-b:    #C4AEFF;
+
+  --gp:      #0369A1;
+  --gp-bg:   #E8F4FD;
+  --gp-b:    #93C9EE;
+
+  --pl:      #1D4ED8;
+  --pl-bg:   #EEF2FF;
+  --pl-b:    #A5B4FC;
+
+  --sc:      #15803D;
+  --sc-bg:   #F0FDF4;
+  --sc-b:    #86EFAC;
+
+  --ramp:    #C2410C;
+  --ramp-bg: #FFF7ED;
+  --ramp-b:  #FDBA74;
+
+  --bb:      #374151;
+  --bb-bg:   #F3F4F6;
+  --bb-b:    #9CA3AF;
+
+  --ada:     #1A44C2;
+  --ada-bg:  #EEF2FF;
+
+  --mvp:     #15803D;
+  --p2:      #1D4ED8;
+  --p3:      #C2410C;
+  --p4:      #6B7280;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── UTILS ── */
+.mono { font-family: 'JetBrains Mono', monospace; }
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 32px 0 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.section-rule::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+/* ── HEADER ── */
+.header {
+  border-top: 3px solid var(--ink);
+  padding: 20px 0 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.h-title { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.h-title span { color: var(--pl); }
+.h-right { text-align: right; }
+.h-tagline { font-size: 12px; color: var(--muted); max-width: 260px; line-height: 1.6; }
+
+/* ── WHAT IS THIS ── */
+.what {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+.what-col {}
+.what-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.what-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.what-col:not(:last-child) { border-right: 1px solid var(--rule); padding-right: 24px; }
+
+/* ── ACTOR CARDS ── */
+.actors { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 32px; }
+.actor {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px 18px;
+  border-top: 2.5px solid;
+}
+.actor-lp  { border-top-color: var(--lp); }
+.actor-gp  { border-top-color: var(--gp); }
+.actor-pl  { border-top-color: var(--pl); }
+.actor-tag { display:inline-block; padding:2px 7px; border-radius:3px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+.tag-lp { background:var(--lp-bg); color:var(--lp); border:1px solid var(--lp-b); }
+.tag-gp { background:var(--gp-bg); color:var(--gp); border:1px solid var(--gp-b); }
+.tag-pl { background:var(--pl-bg); color:var(--pl); border:1px solid var(--pl-b); }
+.tag-sc { background:var(--sc-bg); color:var(--sc); border:1px solid var(--sc-b); }
+.tag-ramp { background:var(--ramp-bg); color:var(--ramp); border:1px dashed var(--ramp-b); }
+.tag-bb { background:var(--bb-bg); color:var(--bb); border:1px solid var(--bb-b); }
+.tag-mvp { background:#DCFCE7; color:var(--mvp); border:1px solid var(--sc-b); }
+.tag-p2  { background:var(--pl-bg); color:var(--p2); border:1px solid var(--pl-b); }
+.tag-p3  { background:var(--ramp-bg); color:var(--p3); border:1px solid var(--ramp-b); }
+.tag-p4  { background:#F3F4F6; color:var(--p4); border:1px solid #D1D5DB; }
+.actor-name { font-size:14px; font-weight:600; margin-bottom:5px; }
+.actor-desc { font-size:11.5px; color:var(--muted); line-height:1.65; }
+
+/* ── NODE ── */
+.nd {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: 1.5px solid;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.25;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nd-sub { font-size: 8.5px; font-weight: 400; opacity: 0.65; margin-top: 2px; }
+.nd-lp   { background:var(--lp-bg);   border-color:var(--lp-b);   color:var(--lp); }
+.nd-gp   { background:var(--gp-bg);   border-color:var(--gp-b);   color:var(--gp); }
+.nd-pl   { background:var(--pl-bg);   border-color:var(--pl-b);   color:var(--pl); }
+.nd-sc   { background:var(--sc-bg);   border-color:var(--sc-b);   color:var(--sc); }
+.nd-ramp { background:var(--ramp-bg); border-color:var(--ramp-b); color:var(--ramp); border-style:dashed; }
+.nd-bb   { background:var(--bb-bg);   border-color:var(--bb-b);   color:var(--bb); }
+
+/* ── ARROWS ── */
+.arr-r, .arr-l {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 4px;
+  min-width: 40px;
+  flex-shrink: 0;
+}
+.arr-line {
+  height: 1.5px;
+  width: 100%;
+  background: var(--rule2);
+  position: relative;
+}
+.arr-r .arr-line::after  { content:'▶'; position:absolute; right:-5px; top:-6px; font-size:8px; color:var(--rule2); }
+.arr-l .arr-line::before { content:'◀'; position:absolute; left:-5px;  top:-6px; font-size:8px; color:var(--rule2); }
+.arr-lbl { font-family:'JetBrains Mono',monospace; font-size:7.5px; color:var(--dim); margin-top:3px; white-space:nowrap; }
+
+.arr-d { display:flex; flex-direction:column; align-items:center; margin:3px 0; }
+.arr-d-line { width:1.5px; height:16px; background:var(--rule2); position:relative; }
+.arr-d-line::after { content:'▼'; position:absolute; bottom:-8px; left:-4px; font-size:8px; color:var(--rule2); }
+.arr-d-lbl { font-family:'JetBrains Mono',monospace; font-size:7.5px; color:var(--dim); margin-top:10px; }
+
+/* ── DIAGRAM WRAPPER ── */
+.diagram-outer {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.diagram-title { font-size:14px; font-weight:700; margin-bottom:6px; }
+.diagram-sub   { font-size:11.5px; color:var(--muted); margin-bottom:20px; line-height:1.6; }
+
+/* zones */
+.zones {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.zone-pill {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+.zone-crypto { background:var(--pl-bg); color:var(--pl); border:1px solid var(--pl-b); }
+.zone-tradfi { background:var(--bb-bg); color:var(--bb); border:1px solid var(--bb-b); }
+.zone-road   { background:var(--ramp-bg); color:var(--ramp); border:1px dashed var(--ramp-b); }
+
+/* two-col layout */
+.sc-layout {
+  display: grid;
+  grid-template-columns: 1fr 2px 200px;
+  gap: 0;
+  align-items: stretch;
+}
+.sc-divider {
+  background: var(--ink);
+  margin: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.sc-divider-lbl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+  white-space: nowrap;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--white);
+  background:var(--ink);
+  padding:3px 8px;
+  border-radius:2px;
+}
+
+/* swimlanes */
+.lanes { display:flex; flex-direction:column; gap:0; }
+.lane  {
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid var(--rule);
+}
+.lane:first-child { border-top: none; }
+.lane-lbl {
+  width: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 12px 10px 12px 0;
+  border-right: 1px solid var(--rule);
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+  line-height:1.4;
+}
+.lane-body {
+  flex: 1;
+  padding: 12px 0 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+}
+.frow { display:flex; align-items:center; gap:0; flex-wrap:nowrap; }
+
+/* tradfi panel */
+.tradfi-panel {
+  background: var(--bb-bg);
+  border: 1.5px solid var(--bb-b);
+  border-radius: 6px;
+  padding: 16px;
+  margin-left: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.tradfi-title { font-size:13px; font-weight:700; color:var(--bb); }
+.tradfi-desc  { font-size:10.5px; color:var(--muted); line-height:1.55; }
+.tradfi-item  { font-size:9.5px; color:var(--muted); }
+.tradfi-badge {
+  margin-top:4px;
+  display:inline-block;
+  padding:3px 8px;
+  background:var(--ramp-bg);
+  border:1px dashed var(--ramp-b);
+  border-radius:3px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  color:var(--ramp);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+
+/* diagram note */
+.diagram-note {
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-left: 3px solid var(--rule2);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.dn-item { display:flex; gap:5px; }
+.dn-bullet { color:var(--pl); flex-shrink:0; margin-top:1px; }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.legend-item { display:flex; align-items:center; gap:7px; font-size:11.5px; }
+.legend-box {
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:22px; border-radius:4px; border:1.5px solid;
+  font-family:'JetBrains Mono',monospace; font-size:7.5px; font-weight:700;
+  flex-shrink:0;
+}
+
+/* ── SC COMPONENT TABLE ── */
+.sc-table {
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:32px;
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:8px;
+  overflow:hidden;
+}
+.sc-table th {
+  background:var(--bg);
+  padding:10px 14px;
+  text-align:left;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--dim);
+  border-bottom:1px solid var(--rule);
+  font-weight:600;
+}
+.sc-table td {
+  padding:10px 14px;
+  border-bottom:1px solid var(--rule);
+  vertical-align:top;
+  font-size:11.5px;
+}
+.sc-table tr:last-child td { border-bottom:none; }
+.sc-table tr:hover td { background:#FAFAF8; }
+.sc-td-name { font-weight:600; white-space:nowrap; color:var(--sc); }
+.sc-td-tmpl { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pl); }
+.sc-td-desc { color:var(--muted); line-height:1.6; }
+.sc-td-phase { white-space:nowrap; }
+
+/* ── ROADMAP ── */
+.roadmap { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:32px; }
+.phase {
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:8px;
+  overflow:hidden;
+}
+.phase-head {
+  padding:14px 16px 12px;
+  border-bottom:1px solid var(--rule);
+}
+.phase-num { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); margin-bottom:4px; }
+.phase-title { font-size:13px; font-weight:700; margin-bottom:6px; }
+.phase-body { padding:10px 16px 14px; }
+.pitem {
+  display:flex; gap:7px; align-items:flex-start;
+  padding:5px 0; border-top:1px solid var(--rule);
+  font-size:11px; color:var(--muted); line-height:1.4;
+}
+.pitem:first-child { border-top:none; padding-top:8px; }
+.pdot { width:5px; height:5px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+
+/* ── FOOTER ── */
+.footer {
+  border-top:1px solid var(--rule);
+  padding-top:14px;
+  display:flex;
+  justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--dim);
+  letter-spacing:0.1em;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="eyebrow">Platform Architecture</div>
+    <div class="h-title">Neo-Fund<br><span>Platform</span></div>
+  </div>
+  <div class="h-right">
+    <div class="eyebrow" style="text-align:right">Cometa Labs · Jun 2026</div>
+    <div class="h-tagline">Self-serve fund infrastructure built on Cardano smart contract templates. GPs hold liability. Platform holds the rails.</div>
+  </div>
+</div>
+
+<!-- WHAT IS THIS -->
+<div class="section-rule">What is this</div>
+<div class="what">
+  <div class="what-col">
+    <div class="what-label" style="color:var(--pl)">The Problem</div>
+    <div class="what-text">Running a cross-border fund requires $50–200K in legal setup, a licensed administrator, prime broker relationships, and ongoing compliance overhead. Only institutional managers can access this infrastructure today.</div>
+  </div>
+  <div class="what-col">
+    <div class="what-label" style="color:var(--sc)">The Solution</div>
+    <div class="what-text">A self-serve platform where sophisticated individuals can form, raise for, and operate a legal fund in days — not months. Cardano smart contracts replace the administrative overhead. Alpaca replaces the prime broker relationship.</div>
+  </div>
+  <div class="what-col">
+    <div class="what-label" style="color:var(--lp)">The Model</div>
+    <div class="what-text">Platform is a technology and infrastructure provider — not an adviser or broker. GPs are legally responsible for their fund. LPs interact only with the GP's whitelabeled app. Smart contracts enforce the declared thesis — no discretionary drift.</div>
+  </div>
+</div>
+
+<!-- ACTORS -->
+<div class="section-rule">Actors</div>
+<div class="actors">
+  <div class="actor actor-lp">
+    <div class="actor-tag tag-lp">LP — Investor</div>
+    <div class="actor-name">Limited Partner</div>
+    <div class="actor-desc">Accredited or sophisticated. Subscribes in USDC or ADA via the GP's branded app. Never interacts with the platform directly. Receives pro-rata distribution when the fund's thesis exits.</div>
+  </div>
+  <div class="actor actor-gp">
+    <div class="actor-tag tag-gp">GP — Manager</div>
+    <div class="actor-name">Fund Operator</div>
+    <div class="actor-desc">Passes platform KYC and sophistication gate. Declares a fixed thesis at formation — tickers, position limits, hold period. Executes on Alpaca within those parameters. Legally responsible for LP compliance and fund conduct.</div>
+  </div>
+  <div class="actor actor-pl">
+    <div class="actor-tag tag-pl">Platform</div>
+    <div class="actor-name">Infrastructure Layer</div>
+    <div class="actor-desc">Provides formation docs, smart contract deployment, Alpaca account configuration, portfolio reporting, and distribution rails. Holds Alpaca API keys per fund to enforce thesis constraints. Never holds LP funds directly.</div>
+  </div>
+</div>
+
+<!-- SMART CONTRACT DIAGRAM -->
+<div class="section-rule">Smart Contract Components — Capital Flow</div>
+
+<div class="diagram-outer">
+  <div class="diagram-title">Capital Flow Architecture</div>
+  <div class="diagram-sub">Money enters as USDC or ADA, is held and routed by smart contracts, executes as equities on Alpaca, then returns and splits programmatically. Platform never holds a balance — contracts are the counterparty at every step.</div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--lp-bg);border-color:var(--lp-b);color:var(--lp)">LP</div>
+      <span>Investor wallet</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--gp-bg);border-color:var(--gp-b);color:var(--gp)">GP</div>
+      <span>Fund manager</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--sc-bg);border-color:var(--sc-b);color:var(--sc)">SC</div>
+      <span>Smart contract</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--pl-bg);border-color:var(--pl-b);color:var(--pl)">PF</div>
+      <span>Platform</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--ramp-bg);border-color:var(--ramp-b);color:var(--ramp);border-style:dashed">RP</div>
+      <span>Ramp — roadmap only</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box" style="background:var(--bb-bg);border-color:var(--bb-b);color:var(--bb)">BB</div>
+      <span>Alpaca — TradFi execution</span>
+    </div>
+  </div>
+
+  <!-- ZONE LABELS -->
+  <div class="zones">
+    <div class="zone-pill zone-crypto">① Crypto Rail — Cardano · MVP</div>
+    <div class="zone-pill zone-tradfi">② TradFi Execution — Alpaca · Phase 2</div>
+    <div class="zone-pill zone-road">③ Fiat Ramp — Phase 3</div>
+  </div>
+
+  <!-- DIAGRAM BODY -->
+  <div class="sc-layout">
+
+    <!-- LEFT: SWIMLANES -->
+    <div class="lanes">
+
+      <!-- Lane: Formation -->
+      <div class="lane">
+        <div class="lane-lbl">Formation</div>
+        <div class="lane-body">
+          <div class="frow">
+            <div class="nd nd-gp">GP<div class="nd-sub">declares thesis</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">KYC + params</div></div>
+            <div class="nd nd-pl">Platform<div class="nd-sub">generates docs</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">deploys via Factory</div></div>
+            <div class="nd nd-sc">Factory SC<div class="nd-sub">per fund</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">spins up</div></div>
+            <div class="nd nd-sc">Escrow + Fund Contract<div class="nd-sub">+ Splitter + Config</div></div>
+          </div>
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;padding-left:2px;">Config contract locks thesis on-chain: allowed tickers, position limits, hold period — immutable after raise closes.</div>
+        </div>
+      </div>
+
+      <!-- Lane: Subscribe -->
+      <div class="lane">
+        <div class="lane-lbl">Subscribe</div>
+        <div class="lane-body">
+          <div class="frow">
+            <div class="nd nd-ramp">Fiat Ramp<div class="nd-sub">roadmap</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">USDC/ADA</div></div>
+            <div class="nd nd-lp">LP Wallet<div class="nd-sub">n investors</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">subscribes</div></div>
+            <div class="nd nd-sc">Escrow SC<div class="nd-sub">holds funds</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">raise closes</div></div>
+            <div class="nd nd-sc">Fund Contract<div class="nd-sub">redeemer lock</div></div>
+          </div>
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;padding-left:2px;">Escrow auto-releases to Fund Contract on target met. Refunds all LPs if raise fails or deadline passes. Escrow's only job.</div>
+        </div>
+      </div>
+
+      <!-- Lane: Deploy -->
+      <div class="lane">
+        <div class="lane-lbl">Deploy</div>
+        <div class="lane-body">
+          <div class="frow">
+            <div class="nd nd-sc">Fund Contract<div class="nd-sub">redeemer lock</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">GP withdraws</div></div>
+            <div class="nd nd-ramp">Ramp<div class="nd-sub">roadmap</div></div>
+            <div class="arr-r"><div class="arr-line"></div><div class="arr-lbl">to Alpaca only</div></div>
+            <div class="nd nd-bb" style="border-style:solid">Alpaca Acct<div class="nd-sub">whitelisted</div></div>
+          </div>
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;padding-left:2px;">Redeemer only unlocks if destination = whitelisted Alpaca address. GP cannot send funds elsewhere. Platform is not the custodian — the constraint is.</div>
+        </div>
+      </div>
+
+      <!-- Lane: Return -->
+      <div class="lane">
+        <div class="lane-lbl">Return</div>
+        <div class="lane-body">
+          <div class="frow">
+            <div class="nd nd-sc">Splitter SC<div class="nd-sub">receives</div></div>
+            <div class="arr-l" style="min-width:44px"><div class="arr-line"></div><div class="arr-lbl">USDC proceeds</div></div>
+            <div class="nd nd-ramp">Ramp<div class="nd-sub">roadmap</div></div>
+            <div class="arr-l" style="min-width:44px"><div class="arr-line"></div><div class="arr-lbl">USD proceeds</div></div>
+            <div class="nd nd-bb">Alpaca Acct<div class="nd-sub">liquidates</div></div>
+          </div>
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;padding-left:2px;">GP triggers exit. Alpaca liquidates positions. Proceeds flow back through ramp as USDC into Splitter SC.</div>
+        </div>
+      </div>
+
+      <!-- Lane: Distribute -->
+      <div class="lane">
+        <div class="lane-lbl">Distribute</div>
+        <div class="lane-body">
+          <div style="display:flex;gap:0;align-items:flex-start;">
+            <div class="nd nd-sc" style="margin-top:12px;flex-shrink:0;">Splitter SC<div class="nd-sub">waterfall</div></div>
+
+            <div style="display:flex;flex-direction:column;gap:5px;flex:1;">
+              <!-- row 1 -->
+              <div class="frow">
+                <div class="arr-r" style="min-width:44px"><div class="arr-line"></div><div class="arr-lbl">① return of capital</div></div>
+                <div class="nd nd-lp">LP 1<div class="nd-sub">pro-rata</div></div>
+                <div style="width:6px;height:1.5px;background:var(--rule2);flex-shrink:0;margin:0 2px;align-self:center;"></div>
+                <div class="nd nd-lp">LP 2<div class="nd-sub">pro-rata</div></div>
+                <div style="font-size:9px;color:var(--dim);margin-left:6px;align-self:center;">+ n LPs</div>
+              </div>
+              <!-- row 2 -->
+              <div class="frow">
+                <div class="arr-r" style="min-width:44px"><div class="arr-line"></div><div class="arr-lbl">② carry + fee</div></div>
+                <div class="nd nd-gp">GP<div class="nd-sub">carry %</div></div>
+                <div style="width:6px;height:1.5px;background:var(--rule2);flex-shrink:0;margin:0 2px;align-self:center;"></div>
+                <div class="nd nd-pl">Platform<div class="nd-sub">fee %</div></div>
+              </div>
+              <!-- row 3 -->
+              <div class="frow">
+                <div class="arr-r" style="min-width:44px"><div class="arr-line"></div><div class="arr-lbl">③ fiat out</div></div>
+                <div class="nd nd-ramp">Fiat Ramp<div class="nd-sub">roadmap</div></div>
+                <div style="font-size:9px;color:var(--dim);margin-left:8px;align-self:center;">→ LP bank accounts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="sc-divider">
+      <div class="sc-divider-lbl">← Cardano Rail &nbsp;·&nbsp; Alpaca →</div>
+    </div>
+
+    <!-- RIGHT: TRADFI PANEL -->
+    <div class="tradfi-panel">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:2px;">TradFi Execution</div>
+      <div class="tradfi-title">Alpaca</div>
+      <div class="tradfi-desc">GP executes thesis within declared parameters. Platform holds API keys per fund — constraining execution to allowed tickers, position limits, and stop-loss floors set at formation.</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+        <div class="tradfi-item">📋 Stocks, ETFs</div>
+        <div class="tradfi-item">🔒 Platform holds API keys</div>
+        <div class="tradfi-item">📐 Thesis params enforced</div>
+        <div class="tradfi-item">🚫 No discretionary trading</div>
+      </div>
+      <div class="tradfi-badge">Phase 2 — Roadmap</div>
+    </div>
+
+  </div>
+
+  <!-- NOTES -->
+  <div class="diagram-note">
+    <div class="dn-item"><span class="dn-bullet">▸</span><span><strong>Factory SC</strong> deploys a fresh set of contracts per fund — Escrow, Fund Contract, Config, Splitter — so each fund is isolated.</span></div>
+    <div class="dn-item"><span class="dn-bullet">▸</span><span><strong>Dashed borders</strong> = Ramp (fiat ↔ crypto). Not built at MVP — USDC/ADA only until Phase 3.</span></div>
+    <div class="dn-item"><span class="dn-bullet">▸</span><span><strong>Platform</strong> never holds a balance at any step. Contracts are the counterparty. GP legal entity is the fund operator of record.</span></div>
+  </div>
+</div>
+
+<!-- SC COMPONENT TABLE -->
+<div class="section-rule">Cardano Template Mapping — MVP Only</div>
+<table class="sc-table">
+  <thead>
+    <tr>
+      <th>Contract</th>
+      <th>Cardano Template</th>
+      <th>Role in Neo-Fund</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="sc-td-name">Factory</td>
+      <td class="sc-td-tmpl">factory</td>
+      <td class="sc-td-desc">Deploys a fresh contract set per fund when a GP creates a new fund. One transaction — GP gets their own Escrow, Fund Contract, Config, and Splitter. This is what makes it self-serve.</td>
+    </tr>
+    <tr>
+      <td class="sc-td-name">Escrow</td>
+      <td class="sc-td-tmpl">escrow / crowdfund</td>
+      <td class="sc-td-desc">Fundraise safety net only. Holds LP subscriptions until the raise target and deadline are both met. If the fund doesn't form — target missed or GP cancels — it unwinds and refunds every LP automatically. No other role.</td>
+    </tr>
+    <tr>
+      <td class="sc-td-name">Fund Contract</td>
+      <td class="sc-td-tmpl">escrow (spend validator)</td>
+      <td class="sc-td-desc">GP-controlled address with a redeemer lock. GP can withdraw funds — but the validator only allows spending to one whitelisted destination: their designated Alpaca account address. Prevents capital going anywhere else. Platform is not the custodian; the constraint is the custodian.</td>
+    </tr>
+    <tr>
+      <td class="sc-td-name">Config</td>
+      <td class="sc-td-tmpl">storage</td>
+      <td class="sc-td-desc">Stores the declared thesis on-chain at formation: allowed tickers, position limits, hold period. Immutable once the raise closes. LPs can read it at any time. Basis for legal recourse if GP deviates.</td>
+    </tr>
+    <tr>
+      <td class="sc-td-name">Splitter</td>
+      <td class="sc-td-tmpl">payment splitter</td>
+      <td class="sc-td-desc">Receives proceeds when GP sends them back from Alpaca. Executes the waterfall: return of capital pro-rata to LP wallets → carry to GP → platform fee. Reads LP shares from the Registry.</td>
+    </tr>
+    <tr>
+      <td class="sc-td-name">Registry</td>
+      <td class="sc-td-tmpl">simple wallet / storage</td>
+      <td class="sc-td-desc">Records each LP's wallet address and contribution at subscription time. Source of truth for the Splitter's pro-rata calculation. Written at raise close, read-only after.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ROADMAP -->
+<div class="section-rule">Feature Roadmap</div>
+<div class="roadmap">
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-num">PHASE 01</div>
+      <div class="phase-title">Foundation</div>
+      <span class="actor-tag tag-mvp">MVP</span>
+    </div>
+    <div class="phase-body">
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>GP KYC + sophistication gate</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Fund formation + PPM generation</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Factory SC: Escrow + Fund Contract + Config + Splitter</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Escrow + Vault: USDC/ADA raise</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Config SC: thesis locked on-chain</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>LP onboarding + self-certification</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Registry SC: LP share tracking</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>LP portfolio dashboard</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Splitter SC: waterfall distribution</div>
+      <div class="pitem"><div class="pdot" style="background:var(--mvp)"></div>Whitelabel LP app per fund</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-num">PHASE 02</div>
+      <div class="phase-title">Cardano Identity + Alpaca</div>
+      <span class="actor-tag tag-p2">Phase 2</span>
+    </div>
+    <div class="phase-body">
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>Atala PRISM LP identity (DID)</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>KYC once — reusable across funds</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>ZK accreditation proof</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>Alpaca account per fund</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>Platform holds Alpaca API keys</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>Thesis enforcement via Alpaca API</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>On-chain NAV via Charli3/Orcfax</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>HTLC exit condition verification</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p2)"></div>Vesting schedule for GP carry</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-num">PHASE 03</div>
+      <div class="phase-title">Fiat + Discovery</div>
+      <span class="actor-tag tag-p3">Phase 3</span>
+    </div>
+    <div class="phase-body">
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Fiat on-ramp (LP subscribes via wire)</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Fiat off-ramp (distribute to bank)</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Upgradeable Proxy SC</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Opt-in fund directory</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>LP browse — no recommendation</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>GP track record page</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Offshore entity support (Cayman)</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p3)"></div>Multi-jurisdiction filing tracker</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-num">PHASE 04</div>
+      <div class="phase-title">Active Trading</div>
+      <span class="actor-tag tag-p4">Future</span>
+    </div>
+    <div class="phase-body">
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>DCA + recurring strategies</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Options + structured products</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Real-time risk monitoring</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Daily NAV reconciliation</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Umbrella RIA structure</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>IBKR upgrade from Alpaca</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Cardano Citizen residency layer</div>
+      <div class="pitem"><div class="pdot" style="background:var(--p4)"></div>Cross-border tax optimization</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Neo-Fund Platform — Architecture v0.3</span>
+  <span>Cometa Labs</span>
+  <span>Jun 2026</span>
+</div>
+
+</body>
+</html>

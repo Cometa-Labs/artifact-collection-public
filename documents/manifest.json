@@ -63,5 +63,18 @@
     "status": "Reference",
     "agentUse": "Use to reason about when junior vs senior engineers are cheaper per unit of shipped output, and which levers (capacity ramp, bug multiplier, max hours, salary multiple) drive that outcome.",
     "tags": ["Operations", "Hiring", "Cost Modeling", "Engineering"]
+  },
+  {
+    "slug": "neofund-platform-architecture",
+    "title": "Neo-Fund Platform",
+    "eyebrow": "Platform Architecture",
+    "summary": "Self-serve fund infrastructure on Cardano smart contract templates — GPs hold legal liability, on-chain contracts enforce a locked investment thesis, and Alpaca handles TradFi execution, with a phased roadmap from crypto-only MVP to fiat ramps and active trading.",
+    "file": "neofund.html",
+    "date": "2026-06-01",
+    "type": "Product",
+    "indexCode": "FUND-008",
+    "status": "Active",
+    "agentUse": "Use to reason about the Neo-Fund platform's actor model (LP/GP/Platform), smart contract capital-flow architecture (Factory, Escrow, Fund Contract, Config, Splitter, Registry), and phased roadmap from MVP through fiat ramp and active trading.",
+    "tags": ["Fund Infrastructure", "Cardano", "Smart Contracts", "Product Architecture"]
   }
 ]
